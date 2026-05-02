@@ -103,14 +103,13 @@ export async function action({ request }: ActionFunctionArgs) {
         continue;
       }
 
-      const ownerInfo = await getOwnerInfo(owner);
       const release = await getLatestRelease(owner, repo);
       results.push({
         owner,
         repo,
         release,
         error: !release ? "No releases found" : undefined,
-        ownerAvatar: ownerInfo?.avatar_url,
+        ownerAvatar: release?.author.avatar_url,
         source: "github",
       });
     } else {

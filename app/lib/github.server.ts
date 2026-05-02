@@ -10,6 +10,7 @@ interface Release {
     login: string;
     avatar_url: string;
   };
+  status?: string
 }
 
 interface NPMRelease {
