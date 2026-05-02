@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-import { Box, Container, Heading, Text, VStack, HStack, Button, Icon } from "@chakra-ui/react";
+import { Box, Container, Heading, Text, VStack, HStack, Button, Icon, ClientOnly, Skeleton } from "@chakra-ui/react";
 import { FaMoon, FaSun, FaBox } from "react-icons/fa";
 import { RepositoryForm } from "../components/RepositoryForm";
 import { ReleaseList } from "../components/ReleaseList";
@@ -107,19 +107,21 @@ export default function Home() {
                       Release Tracker
                     </Heading>
                   </HStack>
-                <Button 
-                  onClick={toggleColorMode} 
-                  variant="ghost"
-                  color="gray"
-                  size={["sm", "md"]}
-                  display="flex"
-                  gap={2}
-                  whiteSpace="nowrap"
-                  flexShrink={0}
-                >
-                  <Icon as={colorMode === "dark" ? FaSun : FaMoon} />
-                  <Text display={["none", "inline"]}>{colorMode === "dark" ? "Light" : "Dark"}</Text>
-                </Button>
+                <ClientOnly fallback={<Skeleton width="46px" height="36px" sm={{ width: '95px', height: '40px' }} bgColor="transparent" />}>
+                  <Button 
+                    onClick={toggleColorMode} 
+                    variant="ghost"
+                    color="gray"
+                    size={["sm", "md"]}
+                    display="flex"
+                    gap={2}
+                    whiteSpace="nowrap"
+                    flexShrink={0}
+                  >
+                    <Icon as={colorMode === "dark" ? FaSun : FaMoon} />
+                    <Text display={["none", "inline"]}>{colorMode === "dark" ? "Light" : "Dark"}</Text>
+                  </Button>
+                </ClientOnly>
               </HStack>
              <VStack gap={2} alignItems="flex-start">
                <Text fontSize={["base", "lg"]} opacity={0.95}>
