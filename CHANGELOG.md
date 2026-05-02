@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2](https://github.com/GloryWong/release-tracker/compare/v1.0.1...v1.0.2) (2026-05-02)
+
+
+### Bug Fixes
+
+* **all releases:** add spinner ([6e721c5](https://github.com/GloryWong/release-tracker/commit/6e721c58e07754687409e170f80b22253b06d95c))
+* **npm suggestion:** unique keys ([53b6150](https://github.com/GloryWong/release-tracker/commit/53b61500c4b991b3a4ae5c2d92431c16c0ee3f72))
+
 ## [1.0.1](https://github.com/GloryWong/release-tracker/compare/v1.0.0...v1.0.1) (2026-05-02)
 
 
