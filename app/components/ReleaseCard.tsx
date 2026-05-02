@@ -1,8 +1,14 @@
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { MarkdownHooks } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import rehypeRaw from "rehype-raw";
+import rehypeExternalLinks from 'rehype-external-links'
+import rehypeStarryNight from 'rehype-starry-night'
+import remarkGithub from 'remark-github'
+import { remarkAlert } from 'remark-github-blockquote-alert'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
 import type { Release } from "../lib/github.server";
 import { ReleaseDialog } from "./ReleaseDialog";
 import { AllReleasesDialog } from "./AllReleasesDialog";
@@ -145,39 +151,14 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
                 },
               }}
             >
-              <ReactMarkdown 
-                remarkPlugins={[remarkGfm, remarkBreaks]}
-                rehypePlugins={[rehypeRaw]}
-                components={{
-                  p: ({ node, ...props }) => <Text display="inline" {...props} />,
-                  ul: ({ node, ...props }) => <Box as="ul" display="inline" ml={0} {...props} />,
-                  ol: ({ node, ...props }) => <Box as="ol" display="inline" ml={0} {...props} />,
-                  li: ({ node, ...props }) => <Box as="li" display="inline" mr={1} {...props} />,
-                  code: ({ node, inline, ...props }) => 
-                    <Box 
-                      as="code" 
-                      px={1} 
-                      bg="gray.100" 
-                      borderRadius="sm" 
-                      fontFamily="mono"
-                      fontSize="0.9em"
-                      display="inline"
-                      _dark={{ bg: "gray.700" }}
-                      {...props} 
-                    />,
-                  a: ({ node, ...props }) => (
-                    <Box 
-                      as="a" 
-                      color="blue.600"
-                      display="inline"
-                      _dark={{ color: "blue.400" }}
-                      {...props} 
-                    />
-                  ),
-                }}
+              <MarkdownHooks 
+                remarkPlugins={[remarkGfm, remarkBreaks, [remarkGithub, { repository: `${ownerFromUrl}/${repoFromUrl}` }], remarkAlert]}
+                rehypePlugins={[rehypeRaw, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], rehypeStarryNight]}
+                remarkRehypeOptions={{ allowDangerousHtml: true }}
+                fallback={<div>Rendering markdown…</div>}
               >
-                {stripMarkdownAndTruncate(release.body, 300)}
-              </ReactMarkdown>
+                {release.body}
+              </MarkdownHooks>
             </Box>
           )}
 
