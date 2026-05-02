@@ -40,7 +40,7 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
             Latest Releases
           </Heading>
           <Text color="gray.600" fontSize={["xs", "sm"]} _dark={{ color: "gray.400" }}>
-            Showing {repositories.length} repository/repositories
+            Showing {repositories.length} repositor{repositories.length > 1 ? 'ies' : 'y'}
           </Text>
         </Box>
 
