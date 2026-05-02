@@ -8,6 +8,7 @@ import {
   Text,
   Heading,
   Link,
+  Spinner,
 } from "@chakra-ui/react";
 
 interface AllReleasesDialogProps {
@@ -194,7 +195,7 @@ export function AllReleasesDialog({ owner, repo, isOpen, onClose }: AllReleasesD
              <Box ref={observerTarget} textAlign="center" py={6}>
                {isLoading && (
                  <VStack gap={2}>
-                   <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>Loading more releases...</Text>
+                   <Spinner color="gray.600" _dark={{ color: "gray.400" }} /><Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>Loading more releases...</Text>
                  </VStack>
                )}
                {!hasMore && releases.length > 0 && (
