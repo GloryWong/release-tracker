@@ -634,7 +634,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                   >
                       { npmSuggestions.map((suggestion, index) => (
                        <Box
-                         key={suggestion.repo}
+                         key={suggestion.packageName}
                          px={4}
                          py={3}
                          cursor="pointer"
