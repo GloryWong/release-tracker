@@ -11,8 +11,11 @@ import {
   HStack,
   Icon,
   Tabs,
+  Spinner,
+  Flex,
+  Center,
 } from "@chakra-ui/react";
-import { FaSearch, FaRocket, FaNpm, FaGithub } from "react-icons/fa";
+import { FaSearch, FaRocket, FaNpm, FaGithub, FaSpinner } from "react-icons/fa";
 import { SiNpm } from "react-icons/si";
 import { keyframes } from "@emotion/react";
 
@@ -182,12 +185,14 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
   };
 
   // Fetch GitHub suggestions
+  const [githubSuggestionsLoading, setGithubSuggestionsLoading] = useState(false)
   useEffect(() => {
     if (throttledGithubInput.length > 2) {
       const fetchSuggestions = async () => {
         // Cancel previous request
         githubAbortControllerRef.current?.abort();
         githubAbortControllerRef.current = new AbortController();
+        setGithubSuggestionsLoading(true)
         
         try {
           const response = await fetch(
@@ -201,10 +206,12 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
           } else {
             setGithubSuggestions([]);
           }
+          setGithubSuggestionsLoading(false)
         } catch (error) {
           if ((error as Error).name !== "AbortError") {
             console.error("Error fetching GitHub suggestions:", error);
             setGithubSuggestions([]);
+            setGithubSuggestionsLoading(false)
           }
         }
       };
@@ -216,12 +223,14 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
   }, [throttledGithubInput]);
 
   // Fetch NPM suggestions
+  const [npmSuggestionsLoading, setNpmSuggestionsLoading] = useState(false)
   useEffect(() => {
     if (throttledNpmInput.length > 1) {
       const fetchSuggestions = async () => {
         // Cancel previous request
         npmAbortControllerRef.current?.abort();
         npmAbortControllerRef.current = new AbortController();
+        setNpmSuggestionsLoading(true)
         
         try {
           const response = await fetch(
@@ -235,10 +244,12 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
           } else {
             setNpmSuggestions([]);
           }
+          setNpmSuggestionsLoading(false)
         } catch (error) {
           if ((error as Error).name !== "AbortError") {
             console.error("Error fetching NPM suggestions:", error);
             setNpmSuggestions([]);
+            setNpmSuggestionsLoading(false)
           }
         }
       };
@@ -541,7 +552,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                 }}
                 position="relative"
               >
-                 <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} />
+                  { npmSuggestionsLoading ? <Spinner /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
                  {repositories
                    .filter((r) => r.source === "npm")
                      .map((repo, index) => (
@@ -621,7 +632,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                     zIndex={50}
                     _dark={{ bg: "gray.800", borderColor: "gray.600" }}
                   >
-                    {npmSuggestions.map((suggestion, index) => (
+                      { npmSuggestions.map((suggestion, index) => (
                        <Box
                          key={suggestion.repo}
                          px={4}
@@ -690,7 +701,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                  }}
                  position="relative"
                >
-                 <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} />
+                { githubSuggestionsLoading ? <Spinner /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
                 {repositories
                   .filter((r) => r.source === "github")
                   .map((repo, index) => (
