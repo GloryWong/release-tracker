@@ -41,7 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             __html: `
               (function() {
                 // Get stored color mode preference
-                const storedMode = localStorage.getItem('chakra-ui-color-mode');
+                const storedMode = localStorage.getItem('release-tracker-color-mode');
                 
                 let mode = storedMode;
                 
@@ -61,7 +61,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 
                 // Store preference if not already stored
                 if (!storedMode) {
-                  localStorage.setItem('chakra-ui-color-mode', mode);
+                  localStorage.setItem('release-tracker-color-mode', mode);
                 }
               })();
             `,

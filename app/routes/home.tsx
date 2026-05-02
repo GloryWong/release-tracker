@@ -26,7 +26,7 @@ interface RepositoryRelease {
 const sessionFetchCache = new Map<string, RepositoryRelease>();
 
 export default function Home() {
-  const fetcher = useFetcher<{ repositories?: RepositoryRelease[]; error?: string }>();
+  const fetcher = useFetcher<{ repositories?: RepositoryRelease[]; alreadyFetched?: [], error?: string }>();
   const [repositories, setRepositories] = useState<RepositoryRelease[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [colorMode, setColorMode] = useState<"light" | "dark">("light");
@@ -41,12 +41,12 @@ export default function Home() {
     if (isDark) {
       document.documentElement.classList.remove("dark");
       document.documentElement.style.colorScheme = "light";
-      localStorage.setItem("chakra-ui-color-mode", "light");
+      localStorage.setItem("release-tracker-color-mode", "light");
       setColorMode("light");
     } else {
       document.documentElement.classList.add("dark");
       document.documentElement.style.colorScheme = "dark";
-      localStorage.setItem("chakra-ui-color-mode", "dark");
+      localStorage.setItem("release-tracker-color-mode", "dark");
       setColorMode("dark");
     }
   };
@@ -61,10 +61,20 @@ export default function Home() {
         }
       }
 
+      // Push already fetched
+      const { alreadyFetched } = fetcher.data
+      const alreadyReleases: RepositoryRelease[] = []
+      alreadyFetched?.forEach(v => {
+        const release = sessionFetchCache.get(v)
+        if (release) {
+          alreadyReleases.push(release)
+        }
+      })
+
       // Deduplicate repositories by owner+repo combination
       // Keep the first occurrence (GitHub takes priority over NPM)
       const seen = new Set<string>();
-      const deduplicated = fetcher.data.repositories.filter((repo) => {
+      const deduplicated = [...alreadyReleases, ...fetcher.data.repositories].filter((repo) => {
         const key = `${repo.owner}/${repo.repo}`;
         if (seen.has(key)) {
           return false;

@@ -65,6 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const results: any[] = [];
+  const _alreadyFetched: any[] = [];
 
   for (const item of items) {
     // Check if it's a scoped npm package (@scope/name) or a GitHub repo (owner/repo)
@@ -87,6 +88,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
       // Skip if already fetched
       if (alreadyFetched.has(repoKey)) {
+        _alreadyFetched.push(repoKey)
         continue;
       }
 
@@ -142,6 +144,7 @@ export async function action({ request }: ActionFunctionArgs) {
             
             // Skip if already fetched
             if (alreadyFetched.has(repoKey)) {
+              _alreadyFetched.push(repoKey)
               continue;
             }
 
@@ -196,5 +199,5 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   }
 
-  return { repositories: results };
+  return { repositories: results, alreadyFetched: _alreadyFetched };
 }
