@@ -1,0 +1,208 @@
+/* Chakra UI will handle all styling */
+
+/* GitHub-style markdown rendering */
+.github-markdown {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #24292e;
+}
+
+.github-markdown h1,
+.github-markdown h2,
+.github-markdown h3,
+.github-markdown h4,
+.github-markdown h5,
+.github-markdown h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.github-markdown h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.github-markdown h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.github-markdown h3 {
+  font-size: 1.25em;
+}
+
+.github-markdown h4 {
+  font-size: 1em;
+}
+
+.github-markdown h5 {
+  font-size: 0.875em;
+}
+
+.github-markdown h6 {
+  font-size: 0.85em;
+  color: #6a737d;
+}
+
+.github-markdown p {
+  margin-bottom: 16px;
+}
+
+.github-markdown ul,
+.github-markdown ol {
+  margin-bottom: 16px;
+  padding-left: 2em;
+}
+
+.github-markdown li {
+  margin-bottom: 8px;
+}
+
+.github-markdown code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.github-markdown pre {
+  background-color: #f6f8fa;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.github-markdown pre code {
+  background-color: transparent;
+  border: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  word-break: normal;
+}
+
+.github-markdown blockquote {
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+  margin-bottom: 16px;
+}
+
+.github-markdown a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.github-markdown a:hover {
+  text-decoration: underline;
+}
+
+.github-markdown strong {
+  font-weight: 600;
+}
+
+.github-markdown em {
+  font-style: italic;
+}
+
+.github-markdown del {
+  color: #6a737d;
+  text-decoration: line-through;
+}
+
+.github-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.github-markdown table th,
+.github-markdown table td {
+  border: 1px solid #ddd;
+  padding: 6px 13px;
+  text-align: left;
+}
+
+.github-markdown table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.github-markdown hr {
+  background-color: #e1e4e8;
+  border: 0;
+  height: 2px;
+  margin: 24px 0;
+}
+
+/* Dark mode support for GitHub markdown */
+:root[data-theme="dark"] .github-markdown,
+.dark .github-markdown {
+  color: #e0e0e0;
+}
+
+:root[data-theme="dark"] .github-markdown h1,
+:root[data-theme="dark"] .github-markdown h2,
+.dark .github-markdown h1,
+.dark .github-markdown h2 {
+  border-bottom-color: #444;
+}
+
+:root[data-theme="dark"] .github-markdown h6,
+.dark .github-markdown h6 {
+  color: #a0a0a0;
+}
+
+:root[data-theme="dark"] .github-markdown code,
+.dark .github-markdown code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="dark"] .github-markdown pre,
+.dark .github-markdown pre {
+  background-color: #2d2d2d;
+  border-color: #444;
+}
+
+:root[data-theme="dark"] .github-markdown blockquote,
+.dark .github-markdown blockquote {
+  color: #a0a0a0;
+  border-left-color: #555;
+}
+
+:root[data-theme="dark"] .github-markdown a,
+.dark .github-markdown a {
+  color: #4da6ff;
+}
+
+:root[data-theme="dark"] .github-markdown table th,
+:root[data-theme="dark"] .github-markdown table td,
+.dark .github-markdown table th,
+.dark .github-markdown table td {
+  border-color: #555;
+}
+
+:root[data-theme="dark"] .github-markdown table th,
+.dark .github-markdown table th {
+  background-color: #2d2d2d;
+}
+
+:root[data-theme="dark"] .github-markdown table tr:nth-child(2n),
+.dark .github-markdown table tr:nth-child(2n) {
+  background-color: #1a1a1a;
+}
+
+:root[data-theme="dark"] .github-markdown hr,
+.dark .github-markdown hr {
+  background-color: #555;
+}
