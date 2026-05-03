@@ -1,17 +1,21 @@
 import type { Release } from "../lib/github.server";
 import { Box, Heading, Text, VStack, HStack, Button, Icon } from "@chakra-ui/react";
-import { FaTimes } from "react-icons/fa";
+import { FaGithub, FaTimes } from "react-icons/fa";
 import { ReleaseMarkdown } from "./ReleaseMarkdown";
+import { ExternalLink } from "./ExternalLink";
+import TimeAgo from "react-timeago";
+import { GoTag } from "react-icons/go";
 
 interface ReleaseDialogProps {
   release: Release;
+  repoUrl: string;
   owner: string;
   repo: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function ReleaseDialog({ release, owner, repo, isOpen, onClose }: ReleaseDialogProps) {
+export function ReleaseDialog({ release, repoUrl, owner, repo, isOpen, onClose }: ReleaseDialogProps) {
   if (!isOpen) return null;
 
   const publishDate = new Date(release.published_at);
@@ -41,38 +45,53 @@ export function ReleaseDialog({ release, owner, repo, isOpen, onClose }: Release
         onClick={(e) => e.stopPropagation()}
       >
          {/* Header */}
-         <Box borderBottom="1px solid" borderColor="gray.200" p={6} display="flex" justifyContent="space-between" alignItems="flex-start" _dark={{ borderColor: "gray.700" }}>
-           <VStack gap={1} alignItems="flex-start">
+         <Box borderBottom="1px solid" borderColor="gray.200" p={6} _dark={{ borderColor: "gray.700" }}>
+          <HStack justifyContent="space-between" alignItems="center">
+            <ExternalLink href={release.html_url}>
              <Heading size="lg" color="gray.900" _dark={{ color: "gray.100" }}>{release.name || release.tag_name}</Heading>
-             <Text fontSize="sm" fontFamily="mono" color="gray.600" _dark={{ color: "gray.400" }}>
-               {release.tag_name}
-             </Text>
-           </VStack>
+            </ExternalLink>
            <Button variant="ghost" onClick={onClose} minW="auto" h="auto" p={0}>
              <Icon as={FaTimes} />
            </Button>
+          </HStack>
         </Box>
 
          {/* Meta */}
-         <Box borderBottom="1px solid" borderColor="gray.200" bg="gray.50" p={4} _dark={{ borderColor: "gray.700", bg: "gray.700" }}>
-           <HStack gap={4} fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }} flexWrap="wrap">
-            <Text>
-              {publishDate.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </Text>
+         <Box borderBottom="1px solid" borderColor="gray.200" bg="gray.50" py={4} px={6} _dark={{ borderColor: "gray.700", bg: "gray.700" }}>
+           <HStack gap={[2,4]} fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }} alignItems="center" flexWrap="wrap">
+            <HStack gap={1} alignItems="center">
+              <Text>Released</Text>
+              <TimeAgo date={publishDate} live={false} />
+              <Text>
+                ({publishDate.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })})
+              </Text>
+            </HStack>
+            <HStack gap={4} flexGrow={1} justifyContent="space-between" alignItems="center">
+              <ExternalLink href={repoUrl + '/tree/' + release.tag_name}>
+              <HStack gap={1}>
+                <Icon>
+                  <GoTag />
+                </Icon>
+                <Text fontSize={["xs", "sm"]} fontFamily="mono" color="gray.600" _dark={{ color: "gray.400" }}>
+                  {release.tag_name}
+                </Text>
+              </HStack>
+              </ExternalLink>
             {release.prerelease && (
-              <Box px={2} py={1} bg="orange.100" color="orange.800" borderRadius="md" fontSize="xs">
+              <Box px={2} py={1} bg="orange.200" color="orange.800" borderRadius="md" fontSize="xs">
                 Pre-release
               </Box>
             )}
             {release.draft && (
-              <Box px={2} py={1} bg="gray.200" color="gray.800" borderRadius="md" fontSize="xs">
+              <Box px={2} py={1} bg="bg.emphasized" color="fg.muted" borderRadius="md" fontSize="xs">
                 Draft
               </Box>
             )}
+            </HStack>
           </HStack>
         </Box>
 
@@ -90,7 +109,7 @@ export function ReleaseDialog({ release, owner, repo, isOpen, onClose }: Release
             {...{ href: release.html_url, target: "_blank", rel: "noopener noreferrer" }}
             variant="outline"
           >
-            View on GitHub
+            View on GitHub <Icon as={FaGithub}></Icon>
           </Button>
           <Button colorScheme="blue" onClick={onClose}>
             Close

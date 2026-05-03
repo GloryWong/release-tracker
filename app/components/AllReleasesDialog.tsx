@@ -7,18 +7,23 @@ import {
   VStack,
   Text,
   Heading,
-  Link,
+  Image,
   Spinner,
+  HStack,
+  Icon,
 } from "@chakra-ui/react";
+import { ExternalLink } from "./ExternalLink";
+import { FaTimes } from "react-icons/fa";
 
 interface AllReleasesDialogProps {
   owner: string;
   repo: string;
+  ownerAvatar?: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function AllReleasesDialog({ owner, repo, isOpen, onClose }: AllReleasesDialogProps) {
+export function AllReleasesDialog({ owner, repo, isOpen, ownerAvatar, onClose }: AllReleasesDialogProps) {
   const [releases, setReleases] = useState<Release[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -144,20 +149,36 @@ export function AllReleasesDialog({ owner, repo, isOpen, onClose }: AllReleasesD
        >
           {/* Header */}
           <Box borderBottom="1px solid" borderColor="gray.200" p={6} _dark={{ borderColor: "gray.700" }}>
-            <Heading size="lg" mb={2} color="gray.900" _dark={{ color: "gray.100" }}>
-              All Releases
-            </Heading>
-            <Link 
-              href={`https://github.com/${owner}/${repo}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              fontSize="sm" 
-              color="blue.600"
-              _dark={{ color: "blue.400" }}
-              _hover={{ textDecoration: "underline" }}
-            >
-              {owner}/{repo}
-            </Link>
+            <HStack justifyContent="space-between" alignItems="start">
+              <VStack width="100%" alignItems="start">
+                <Heading size="lg" color="gray.900" _dark={{ color: "gray.100" }}>
+                  All Releases
+                </Heading>
+                <HStack>
+                  {ownerAvatar && (
+                    <Image
+                      src={ownerAvatar}
+                      alt={owner}
+                      width={"24px"}
+                      height={"24px"}
+                      borderRadius="full"
+                      flexShrink={0}
+                    />
+                  )}
+                  <ExternalLink 
+                    href={`https://github.com/${owner}/${repo}`} 
+                  >
+                    <Text fontSize="md" fontWeight="bold" color="blue.600"
+                    _dark={{ color: "blue.400" }}>
+                    {owner}/{repo}
+                    </Text>
+                  </ExternalLink>
+                </HStack>
+              </VStack>
+              <Button variant="ghost" onClick={onClose} minW="auto" h="auto" p={0}>
+                <Icon as={FaTimes} />
+              </Button>
+            </HStack>
           </Box>
 
         {/* Body */}

@@ -30,7 +30,7 @@ interface ReleaseCardProps {
   hideAllReleasesButton?: boolean;
 }
 
-export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButton = false }: ReleaseCardProps) {
+export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAllReleasesButton = false }: ReleaseCardProps) {
   const [showFullDialog, setShowFullDialog] = useState(false);
   const [showAllDialog, setShowAllDialog] = useState(false);
 
@@ -69,7 +69,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButt
 
                 {/* Meta Info */}
               <HStack gap={[2, 4]} width="100%" fontSize={["xs", "sm"]} color="gray.600" _dark={{ color: "gray.400" }} flexWrap="wrap">
-                <HStack gap={4}>
+                <HStack gap={[2,4]} flexWrap="wrap">
                     {release.author && (
                         <HStack gap={1}>
                           <Box
@@ -93,14 +93,14 @@ export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButt
                         </HStack>
                     )}
                     <ExternalLink href={repoUrl + '/tree/' + release.tag_name}>
-                    <HStack gap={1}>
-                      <Icon>
-                        <GoTag />
-                      </Icon>
-                      <Text fontSize={["xs", "sm"]} fontFamily="mono" color="gray.600" _dark={{ color: "gray.400" }}>
-                        {release.tag_name}
-                      </Text>
-                    </HStack>
+                      <HStack gap={1}>
+                        <Icon>
+                          <GoTag />
+                        </Icon>
+                        <Text fontSize={["xs", "sm"]} fontFamily="mono" color="gray.600" _dark={{ color: "gray.400" }}>
+                          {release.tag_name}
+                        </Text>
+                      </HStack>
                     </ExternalLink>
                 </HStack>
               </HStack>
@@ -114,12 +114,12 @@ export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButt
           <HStack gap={[1, 2]} width="100%" flexWrap={["wrap", "nowrap"]} p={[4, 6]}>
               <Button size={["xs", "sm"]} variant="outline" onClick={() => setShowFullDialog(true)} display="flex" gap={[1, 2]} fontSize={["xs", "sm"]}>
                 <Icon as={FaBook} boxSize={[3, 4]} />
-                <Text display={["none", "inline"]}>View Full</Text>
+                <Text>View Full</Text>
               </Button>
               {!hideAllReleasesButton && (
                 <Button size={["xs", "sm"]} variant="outline" onClick={() => setShowAllDialog(true)} display="flex" gap={[1, 2]} fontSize={["xs", "sm"]}>
                   <Icon as={FaList} boxSize={[3, 4]} />
-                  <Text display={["none", "inline"]}>All Releases</Text>
+                  <Text>All Releases</Text>
                 </Button>
               )}
               <Button
@@ -130,12 +130,10 @@ export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButt
                 ml={["auto", "auto"]}
                 fontSize={["xs", "sm"]}
                 fontWeight="semibold"
-                color="blue.500"
-                _dark={{color: "blue.400"}}
                 display="flex"
                 gap={[1, 2]}
               >
-                <Text display={["none", "inline"]}>GitHub</Text>
+                <Text display={["none", "inline"]}>View on GitHub</Text>
                 <Icon as={FaGithub} boxSize={[3, 4]} />
               </Button>
             </HStack>
@@ -146,6 +144,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButt
         <>
           <ReleaseDialog
             release={release}
+            repoUrl={repoUrl}
             owner={ownerFromUrl}
             repo={repoFromUrl}
             isOpen={showFullDialog}
@@ -154,6 +153,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButt
           <AllReleasesDialog
             owner={ownerFromUrl}
             repo={repoFromUrl}
+            ownerAvatar={ownerAvatar}
             isOpen={showAllDialog}
             onClose={() => setShowAllDialog(false)}
           />
