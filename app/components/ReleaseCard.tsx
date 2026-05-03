@@ -49,11 +49,10 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
           borderRadius="lg"
           border="1px solid"
           borderColor="gray.200"
-          // p={[4, 6]}
           _dark={{ bg: "gray.800", borderColor: "gray.700" }}
           _hover={{ boxShadow: "lg", transition: "all 0.2s" }}
         >
-         <VStack gap="0" alignItems="start" width="100%" divideY="1px">
+         <VStack gap="0" alignItems="start" width="100%" divideY="1px" divideColor="gray.200" _dark={{ divideColor: "gray.700"}}>
             <VStack gap={2} p={[4, 6]} width="100%">
               {/* Header */}
               <HStack justifyContent="space-between" width="100%" gap={[2, 3]} flexDirection={["column", "row"]} alignItems={["flex-start", "center"]}>

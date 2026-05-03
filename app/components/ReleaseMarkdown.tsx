@@ -8,6 +8,7 @@ import remarkGithub from "remark-github";
 import { remarkAlert } from "remark-github-blockquote-alert";
 import 'remark-github-blockquote-alert/alert.css';
 import { Box, Center, Spinner } from "@chakra-ui/react";
+import remarkEmoji from "remark-emoji";
 
 export function ReleaseMarkdown({text, owner, repo, limitHeight }: {text:string, owner: string, repo: string, limitHeight?: boolean }) {
   return (
@@ -22,7 +23,7 @@ export function ReleaseMarkdown({text, owner, repo, limitHeight }: {text:string,
 
 
     <MarkdownHooks 
-      remarkPlugins={[remarkGfm, remarkBreaks, [remarkGithub, { repository: `${owner}/${repo}` }], remarkAlert]}
+      remarkPlugins={[remarkGfm, remarkBreaks, [remarkGithub, { repository: `${owner}/${repo}` }], remarkAlert, remarkEmoji]}
       rehypePlugins={[rehypeRaw, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], rehypeStarryNight]}
       remarkRehypeOptions={{ allowDangerousHtml: true }}
       fallback={
