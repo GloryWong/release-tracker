@@ -1,4 +1,4 @@
-import { Link } from "@chakra-ui/react";
+import { Link } from '@chakra-ui/react'
 
 export function ExternalLink({ href, children }: { href: string, children: any }) {
   return (
