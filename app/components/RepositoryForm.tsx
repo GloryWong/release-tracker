@@ -476,11 +476,23 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
           onValueChange={e => setTabIndex(Number.parseInt(e.value))}
         >
           <Tabs.List mb={4} flexWrap="wrap">
-            <Tabs.Trigger value="0" display="flex" gap={[1, 2]} alignItems="center" fontSize={['sm', 'md']}>
+            <Tabs.Trigger
+              value="0"
+              display="flex"
+              gap={[1, 2]}
+              alignItems="center"
+              fontSize={['sm', 'md']}
+            >
               <Icon as={SiNpm} boxSize={[4, 5]} />
               <Text>NPM</Text>
             </Tabs.Trigger>
-            <Tabs.Trigger value="1" display="flex" gap={[1, 2]} alignItems="center" fontSize={['sm', 'md']}>
+            <Tabs.Trigger
+              value="1"
+              display="flex"
+              gap={[1, 2]}
+              alignItems="center"
+              fontSize={['sm', 'md']}
+            >
               <Icon as={FaGithub} boxSize={[4, 5]} />
               <Text>GitHub</Text>
             </Tabs.Trigger>
@@ -488,7 +500,12 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
 
           {/* NPM Tab */}
           <Tabs.Content value="0">
-            <Box position="relative" width="100%" display="flex" flexDirection="column">
+            <Box
+              position="relative"
+              width="100%"
+              display="flex"
+              flexDirection="column"
+            >
               <Box
                 display="flex"
                 flexWrap="wrap"
@@ -506,12 +523,23 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                 }}
                 position="relative"
               >
-                { npmSuggestionsLoading ? <Spinner boxSize={[4, 5]} /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
+                {npmSuggestionsLoading
+                  ? (
+                      <Spinner boxSize={[4, 5]} />
+                    )
+                  : (
+                      <Icon
+                        as={FaSearch}
+                        color="gray.400"
+                        flexShrink={0}
+                        boxSize={[4, 5]}
+                      />
+                    )}
                 {repositories
                   .filter(r => r.source === 'npm')
-                  .map((repo, index) => (
+                  .map(repo => (
                     <Badge
-                      key={`npm-${index}`}
+                      key={repo.packageName}
                       display="flex"
                       alignItems="center"
                       gap={[1, 2]}
@@ -535,7 +563,8 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                       {repo.packageName}
                       <CloseButton
                         size="xs"
-                        onClick={() => removeRepository(repositories.indexOf(repo))}
+                        onClick={() =>
+                          removeRepository(repositories.indexOf(repo))}
                         disabled={isLoading}
                         borderRadius="full"
                         color="gray"
@@ -562,7 +591,10 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                   color="gray.800"
                   _dark={{ color: 'gray.100' }}
                   _focus={{ outline: 'none' }}
-                  _placeholder={{ color: 'gray.500', _dark: { color: 'gray.400' } }}
+                  _placeholder={{
+                    color: 'gray.500',
+                    _dark: { color: 'gray.400' },
+                  }}
                   fontSize={['base', 'lg']}
                 />
               </Box>
@@ -586,13 +618,15 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                   zIndex={50}
                   _dark={{ bg: 'gray.800', borderColor: 'gray.600' }}
                 >
-                  { npmSuggestions.map((suggestion, index) => (
+                  {npmSuggestions.map((suggestion, index) => (
                     <Box
                       key={suggestion.packageName}
                       px={4}
                       py={3}
                       cursor="pointer"
-                      bg={index === selectedNpmIndex ? 'blue.50' : 'transparent'}
+                      bg={
+                        index === selectedNpmIndex ? 'blue.50' : 'transparent'
+                      }
                       borderBottom="1px solid"
                       borderColor="gray.100"
                       _last={{ borderBottom: 'none' }}
@@ -602,7 +636,10 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                       color="gray.900"
                       _hover={{ bg: 'gray.100' }}
                       _dark={{
-                        bg: index === selectedNpmIndex ? 'blue.900' : 'transparent',
+                        bg:
+                          index === selectedNpmIndex
+                            ? 'blue.900'
+                            : 'transparent',
                         borderColor: 'gray.700',
                         color: 'gray.100',
                         _hover: { bg: 'gray.700' },
@@ -629,7 +666,15 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                         </Text>
                       </HStack>
                       {suggestion.description && (
-                        <Text fontSize="xs" color="gray.600" _dark={{ color: 'gray.400' }} ml={suggestion.ownerAvatar ? '32px' : '0'} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                        <Text
+                          fontSize="xs"
+                          color="gray.600"
+                          _dark={{ color: 'gray.400' }}
+                          ml={suggestion.ownerAvatar ? '32px' : '0'}
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                        >
                           {suggestion.description}
                         </Text>
                       )}
@@ -642,7 +687,12 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
 
           {/* GitHub Tab */}
           <Tabs.Content value="1">
-            <Box position="relative" width="100%" display="flex" flexDirection="column">
+            <Box
+              position="relative"
+              width="100%"
+              display="flex"
+              flexDirection="column"
+            >
               <Box
                 display="flex"
                 flexWrap="wrap"
@@ -660,12 +710,23 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                 }}
                 position="relative"
               >
-                { githubSuggestionsLoading ? <Spinner boxSize={[4, 5]} /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
-                { repositories
+                {githubSuggestionsLoading
+                  ? (
+                      <Spinner boxSize={[4, 5]} />
+                    )
+                  : (
+                      <Icon
+                        as={FaSearch}
+                        color="gray.400"
+                        flexShrink={0}
+                        boxSize={[4, 5]}
+                      />
+                    )}
+                {repositories
                   .filter(r => r.source === 'github')
-                  .map((repo, index) => (
+                  .map(repo => (
                     <Badge
-                      key={`github-${index}`}
+                      key={`${repo.owner}/${repo.repo}`}
                       display="flex"
                       alignItems="center"
                       gap={[1, 2]}
@@ -691,7 +752,8 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                       {repo.repo}
                       <CloseButton
                         size="xs"
-                        onClick={() => removeRepository(repositories.indexOf(repo))}
+                        onClick={() =>
+                          removeRepository(repositories.indexOf(repo))}
                         disabled={isLoading}
                         borderRadius="full"
                         color="gray"
@@ -718,7 +780,10 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                   color="gray.800"
                   _dark={{ color: 'gray.100' }}
                   _focus={{ outline: 'none' }}
-                  _placeholder={{ color: 'gray.500', _dark: { color: 'gray.400' } }}
+                  _placeholder={{
+                    color: 'gray.500',
+                    _dark: { color: 'gray.400' },
+                  }}
                   fontSize={['base', 'lg']}
                 />
               </Box>
@@ -748,7 +813,11 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                       px={4}
                       py={3}
                       cursor="pointer"
-                      bg={index === selectedGithubIndex ? 'blue.50' : 'transparent'}
+                      bg={
+                        index === selectedGithubIndex
+                          ? 'blue.50'
+                          : 'transparent'
+                      }
                       borderBottom="1px solid"
                       borderColor="gray.100"
                       _last={{ borderBottom: 'none' }}
@@ -758,7 +827,10 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                       color="gray.900"
                       _hover={{ bg: 'gray.100' }}
                       _dark={{
-                        bg: index === selectedGithubIndex ? 'blue.900' : 'transparent',
+                        bg:
+                          index === selectedGithubIndex
+                            ? 'blue.900'
+                            : 'transparent',
                         borderColor: 'gray.700',
                         color: 'gray.100',
                         _hover: { bg: 'gray.700' },
@@ -782,7 +854,15 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                         </Text>
                       </HStack>
                       {suggestion.description && (
-                        <Text fontSize="xs" color="gray.600" _dark={{ color: 'gray.400' }} ml={suggestion.ownerAvatar ? '32px' : '0'} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                        <Text
+                          fontSize="xs"
+                          color="gray.600"
+                          _dark={{ color: 'gray.400' }}
+                          ml={suggestion.ownerAvatar ? '32px' : '0'}
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                        >
                           {suggestion.description}
                         </Text>
                       )}
@@ -798,7 +878,13 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
       <Input
         type="hidden"
         name="repositories"
-        value={repositories.map(r => r.source === 'npm' ? (r.packageName || r.repo) : `${r.owner}/${r.repo}`).join(', ')}
+        value={repositories
+          .map(r =>
+            r.source === 'npm'
+              ? r.packageName || r.repo
+              : `${r.owner}/${r.repo}`,
+          )
+          .join(', ')}
       />
       <Input
         type="hidden"
