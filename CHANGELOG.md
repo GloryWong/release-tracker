@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.3](https://github.com/GloryWong/release-tracker/compare/v1.0.2...v1.0.3) (2026-05-03)
+
+
+### Bug Fixes
+
+* add remark-emoji ([9d6725d](https://github.com/GloryWong/release-tracker/commit/9d6725d704c8d1be49214811232548f2b5b1e91b))
+* form layout ([3eb6990](https://github.com/GloryWong/release-tracker/commit/3eb69905b0583204d1062e6a9e2f3732c9e8a468))
+* improve release card markdown render ([b927206](https://github.com/GloryWong/release-tracker/commit/b927206fb89487e710e6f1aceeae5d7511c5a58a))
+* release card layout ([80e5fce](https://github.com/GloryWong/release-tracker/commit/80e5fced9f9af597041a8681dbe2165d63c62e15))
+* **release card:** add links ([d588526](https://github.com/GloryWong/release-tracker/commit/d588526d929af2c1fe07e04e4ac23ddcffa909b9))
+* release dialog layout ([d7e336d](https://github.com/GloryWong/release-tracker/commit/d7e336d04678b9d388a9547169eb237bc39f4bd2))
+* **release:** markdown github style ([bb0d14d](https://github.com/GloryWong/release-tracker/commit/bb0d14d077f3e4d4f6b3d0ce487bd1937f180261))
+* update release card layout ([4346b60](https://github.com/GloryWong/release-tracker/commit/4346b60fbf1bd426fcb4ed988183dee12c1065df))
+
 ## [1.0.2](https://github.com/GloryWong/release-tracker/compare/v1.0.1...v1.0.2) (2026-05-02)
 
 
