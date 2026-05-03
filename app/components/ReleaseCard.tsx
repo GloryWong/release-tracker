@@ -30,7 +30,7 @@ interface ReleaseCardProps {
   hideAllReleasesButton?: boolean;
 }
 
-export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAllReleasesButton = false }: ReleaseCardProps) {
+export function ReleaseCard({ release, repoUrl, owner, repo, hideAllReleasesButton = false }: ReleaseCardProps) {
   const [showFullDialog, setShowFullDialog] = useState(false);
   const [showAllDialog, setShowAllDialog] = useState(false);
 
@@ -56,9 +56,11 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
             <VStack gap={2} p={[4, 6]} width="100%">
               {/* Header */}
               <HStack justifyContent="space-between" width="100%" gap={[2, 3]} flexDirection={["column", "row"]} alignItems={["flex-start", "center"]}>
+                <ExternalLink href={release.html_url}>
                   <Heading as="h1" size={["xl", "2xl", "3xl"]} fontWeight="bold" color="gray.900" _dark={{ color: "gray.100" }}>
                     {release.name || release.tag_name}
                   </Heading>
+                </ExternalLink>
                 <HStack gap={2} flexShrink={0} width={["100%", "auto"]}>
                   {isPrerelease && <Badge colorScheme="orange" fontSize={["xs", "sm"]}>Pre-release</Badge>}
                   {isDraft && <Badge colorScheme="gray" fontSize={["xs", "sm"]}>Draft</Badge>}
@@ -90,6 +92,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
                           <TimeAgo date={publishDate} live={false} />
                         </HStack>
                     )}
+                    <ExternalLink href={repoUrl + '/tree/' + release.tag_name}>
                     <HStack gap={1}>
                       <Icon>
                         <GoTag />
@@ -98,6 +101,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
                         {release.tag_name}
                       </Text>
                     </HStack>
+                    </ExternalLink>
                 </HStack>
               </HStack>
             </VStack>
