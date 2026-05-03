@@ -12,12 +12,9 @@ import {
   Icon,
   Tabs,
   Spinner,
-  Flex,
-  Center,
 } from "@chakra-ui/react";
-import { FaSearch, FaRocket, FaNpm, FaGithub, FaSpinner } from "react-icons/fa";
+import { FaSearch, FaRocket, FaGithub } from "react-icons/fa";
 import { SiNpm } from "react-icons/si";
-import { keyframes } from "@emotion/react";
 
 interface Repository {
   owner: string;
@@ -77,11 +74,6 @@ function useThrottle<T>(value: T, delay: number) {
 
   return throttledValue;
 }
-
-const spin = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-`;
 
 export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: RepositoryFormProps) {
    const [tabIndex, setTabIndex] = useState(0);

@@ -1,14 +1,4 @@
 import { useState } from "react";
-import ReactMarkdown, { MarkdownHooks } from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
-import rehypeRaw from "rehype-raw";
-import rehypeExternalLinks from 'rehype-external-links'
-import rehypeStarryNight from 'rehype-starry-night'
-import remarkGithub from 'remark-github'
-import { remarkAlert } from 'remark-github-blockquote-alert'
-import remarkParse from 'remark-parse'
-import remarkRehype from 'remark-rehype'
 import type { Release } from "../lib/github.server";
 import { ReleaseDialog } from "./ReleaseDialog";
 import { AllReleasesDialog } from "./AllReleasesDialog";
@@ -24,6 +14,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FaBook, FaList, FaGithub } from "react-icons/fa";
+import { ReleaseMarkdown } from "./ReleaseMarkdown";
 
 interface ReleaseCardProps {
   release: Release;
@@ -45,25 +36,6 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
   const publishDate = new Date(release.published_at);
   const isPrerelease = release.prerelease;
   const isDraft = release.draft;
-
-  // Helper function to strip markdown and truncate
-  const stripMarkdownAndTruncate = (text: string, maxLength: number = 300) => {
-    // Remove markdown links [text](url) -> text
-    let stripped = text.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1");
-    // Remove markdown bold/italic **text** -> text, __text__ -> text, *text* -> text, _text_ -> text
-    stripped = stripped.replace(/(\*\*|__)(.*?)\1/g, "$2");
-    stripped = stripped.replace(/(\*|_)(.*?)\1/g, "$2");
-    // Remove markdown headers # -> empty
-    stripped = stripped.replace(/^#+\s+/gm, "");
-    // Remove html tags
-    stripped = stripped.replace(/<[^>]+>/g, "");
-    // Trim and truncate
-    stripped = stripped.trim();
-    if (stripped.length > maxLength) {
-      stripped = stripped.substring(0, maxLength).trim() + "...";
-    }
-    return stripped;
-  };
 
    return (
      <>
@@ -131,36 +103,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
             )}
           </HStack>
 
-           {/* Release Body Preview with Markdown */}
-            {release.body && (
-              <Box 
-                width="100%" 
-                fontSize={["xs", "sm"]}
-                color="gray.700"
-                _dark={{ color: "gray.300" }}
-                maxH={["60px", "72px"]}
-                overflow="hidden"
-                className="github-markdown"
-              sx={{
-                "& > *": {
-                  margin: 0,
-                  marginBottom: "0.5em",
-                },
-                "& > *:last-child": {
-                  marginBottom: 0,
-                },
-              }}
-            >
-              <MarkdownHooks 
-                remarkPlugins={[remarkGfm, remarkBreaks, [remarkGithub, { repository: `${ownerFromUrl}/${repoFromUrl}` }], remarkAlert]}
-                rehypePlugins={[rehypeRaw, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], rehypeStarryNight]}
-                remarkRehypeOptions={{ allowDangerousHtml: true }}
-                fallback={<div>Rendering markdown…</div>}
-              >
-                {release.body}
-              </MarkdownHooks>
-            </Box>
-          )}
+            {release.body ? (<ReleaseMarkdown text={release.body} owner={ownerFromUrl} repo={repoFromUrl} limitHeight />) : (<Text color="gray.600" _dark={{ color: "gray.400" }}>No release notes provided.</Text>)}
 
             {/* Actions */}
             <HStack gap={[1, 2]} width="100%" pt={4} borderTop="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.700" }} flexWrap={["wrap", "nowrap"]}>
