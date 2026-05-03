@@ -38,7 +38,7 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
   return (
     <VStack width="100%" gap={[6, 8, 10]}>
 
-      <Text width="100%" textAlign="center" paddingBottom={4} color="gray.600" fontSize={["xs", "sm"]} _dark={{ color: "gray.400" }} borderBottom="1px solid" borderColor="border">
+      <Text width="100%" textAlign="center" color="fg.muted" fontSize={["sm", "md"]}>
         Showing {repositories.length} repositor{repositories.length > 1 ? 'ies' : 'y'} latest release{repositories.length > 1 ? 's' : ''}
       </Text>
 

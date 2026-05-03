@@ -516,11 +516,11 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
           <Tabs.List mb={4} flexWrap="wrap">
             <Tabs.Trigger value="0" display="flex" gap={[1, 2]} alignItems="center" fontSize={["sm", "md"]}>
               <Icon as={SiNpm} boxSize={[4, 5]} />
-              <Text display={["none", "inline"]}>NPM</Text>
+              <Text>NPM</Text>
             </Tabs.Trigger>
             <Tabs.Trigger value="1" display="flex" gap={[1, 2]} alignItems="center" fontSize={["sm", "md"]}>
               <Icon as={FaGithub} boxSize={[4, 5]} />
-              <Text display={["none", "inline"]}>GitHub</Text>
+              <Text>GitHub</Text>
             </Tabs.Trigger>
           </Tabs.List>
 
@@ -530,7 +530,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
               <Box
                 display="flex"
                 flexWrap="wrap"
-                gap={[1, 2]}
+                gap={[2, 3]}
                 alignItems="center"
                 p={[2, 3]}
                 border="1px solid"
@@ -544,7 +544,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                 }}
                 position="relative"
               >
-                  { npmSuggestionsLoading ? <Spinner /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
+                  { npmSuggestionsLoading ? <Spinner boxSize={[4, 5]} /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
                  {repositories
                    .filter((r) => r.source === "npm")
                      .map((repo, index) => (
@@ -555,11 +555,11 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                          gap={[1, 2]}
                          px={[2, 3]}
                          py={1}
-                         borderRadius="full"
+                         borderRadius="md"
                          bg="red.100"
                          color="red.900"
                          _dark={{ bg: 'red.700', color: 'red.100' }}
-                         fontSize={["xs", "sm"]}
+                         fontSize={["sm", "md"]}
                        >
                          {repo.ownerAvatar && (
                            <Image
@@ -572,7 +572,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                          )}
                          {repo.packageName}
                          <CloseButton
-                           size="sm"
+                           size="xs"
                            onClick={() => removeRepository(repositories.indexOf(repo))}
                            disabled={isLoading}
                            borderRadius="full"
@@ -601,7 +601,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                      _dark={{ color: "gray.100" }}
                      _focus={{ outline: "none" }}
                      _placeholder={{ color: "gray.500", _dark: { color: "gray.400" } }}
-                     fontSize={["sm", "base"]}
+                     fontSize={["base", "lg"]}
                     />
                  </Box>
 
@@ -679,7 +679,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                <Box
                  display="flex"
                  flexWrap="wrap"
-                 gap={[1, 2]}
+                 gap={[2, 3]}
                  alignItems="center"
                  p={[2, 3]}
                  border="1px solid"
@@ -693,7 +693,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                  }}
                  position="relative"
                >
-                { githubSuggestionsLoading ? <Spinner /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
+                { githubSuggestionsLoading ? <Spinner boxSize={[4, 5]} /> : <Icon as={FaSearch} color="gray.400" flexShrink={0} boxSize={[4, 5]} /> }
                 {repositories
                   .filter((r) => r.source === "github")
                   .map((repo, index) => (
@@ -704,11 +704,11 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                        gap={[1, 2]}
                        px={[2, 3]}
                        py={1}
-                       borderRadius="full"
+                       borderRadius="md"
                        bg="blue.100"
                        color="blue.900"
                        _dark={{ bg: "blue.700", color: "blue.100" }}
-                       fontSize={["xs", "sm"]}
+                       fontSize={["sm", "md"]}
                        >
                         {repo.ownerAvatar && (
                           <Image
@@ -721,7 +721,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                         )}
                         {repo.owner}/{repo.repo}
                         <CloseButton
-                          size="sm"
+                          size="xs"
                           onClick={() => removeRepository(repositories.indexOf(repo))}
                           disabled={isLoading}
                           borderRadius="full"
@@ -750,7 +750,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                      _dark={{ color: "gray.100" }}
                      _focus={{ outline: "none" }}
                      _placeholder={{ color: "gray.500", _dark: { color: "gray.400" } }}
-                     fontSize={["sm", "base"]}
+                     fontSize={["base", "lg"]}
                    />
                 </Box>
 
@@ -838,7 +838,8 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
       <Button
         type="submit"
         disabled={repositories.length === 0}
-        colorScheme="blue"
+        variant="surface"
+        colorPalette="blue"
         width="100%"
         size={["md", "lg"]}
         fontWeight="bold"
