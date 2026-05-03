@@ -848,6 +848,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
         fontSize={["sm", "base"]}
         loading={isLoading}
         loadingText="Fetching..."
+        spinnerPlacement="end"
       >
         Fetch Releases <Icon as={FaRocket} />
       </Button>

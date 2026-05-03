@@ -36,15 +36,11 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
   }
 
   return (
-    <Box width="100%">
-       <Box mb={[6, 8]} pb={[4, 6]} borderBottom="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
-          <Heading as="h2" size={["md", "lg"]} mb={2} color="gray.900" _dark={{ color: "gray.100" }}>
-            Latest Releases
-          </Heading>
-          <Text color="gray.600" fontSize={["xs", "sm"]} _dark={{ color: "gray.400" }}>
-            Showing {repositories.length} repositor{repositories.length > 1 ? 'ies' : 'y'}
-          </Text>
-        </Box>
+    <VStack width="100%" gap={[6, 8, 10]}>
+
+      <Text width="100%" textAlign="center" paddingBottom={4} color="gray.600" fontSize={["xs", "sm"]} _dark={{ color: "gray.400" }} borderBottom="1px solid" borderColor="border">
+        Showing {repositories.length} repositor{repositories.length > 1 ? 'ies' : 'y'} latest release{repositories.length > 1 ? 's' : ''}
+      </Text>
 
       <VStack gap={[6, 8, 10]} alignItems="stretch" width="100%">
        {repositories.map((item) => {
@@ -97,6 +93,6 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
            );
          })}
       </VStack>
-    </Box>
+    </VStack>
   );
 }

@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import remarkGithub from "remark-github";
 import { remarkAlert } from "remark-github-blockquote-alert";
 import 'remark-github-blockquote-alert/alert.css';
-import { Box, Center, Spinner } from "@chakra-ui/react";
+import { Box, Center, HStack, Spinner } from "@chakra-ui/react";
 import remarkEmoji from "remark-emoji";
 
 export function ReleaseMarkdown({text, owner, repo, limitHeight }: {text:string, owner: string, repo: string, limitHeight?: boolean }) {
@@ -28,7 +28,10 @@ export function ReleaseMarkdown({text, owner, repo, limitHeight }: {text:string,
       remarkRehypeOptions={{ allowDangerousHtml: true }}
       fallback={
         <Center width="100%">
-          <Spinner />
+          <HStack gap={2} alignItems="center" color="fg.muted">
+            <Spinner />
+            Rendering...
+          </HStack>
         </Center>
       }
     >

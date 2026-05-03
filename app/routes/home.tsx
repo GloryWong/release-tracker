@@ -134,7 +134,7 @@ export default function Home() {
        {/* Main Content */}
         <Box flex={1} py={[6, 8]} px={4}>
           <Container maxW={["100%", "4xl"]} px={[2, 4]}>
-            <VStack gap={6} alignItems="stretch">
+            <VStack gap={[6, 8, 10]} alignItems="stretch">
                <fetcher.Form method="post" action="/api/fetch-releases">
                  <RepositoryForm isLoading={isLoading} sessionCache={sessionFetchCache} />
                </fetcher.Form>
