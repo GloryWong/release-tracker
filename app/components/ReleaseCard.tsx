@@ -12,9 +12,14 @@ import {
   Button,
   Image,
   Icon,
+  Link,
+  ClientOnly,
 } from "@chakra-ui/react";
 import { FaBook, FaList, FaGithub } from "react-icons/fa";
 import { ReleaseMarkdown } from "./ReleaseMarkdown";
+import { GoTag } from "react-icons/go";
+import TimeAgo from "react-timeago";
+import { ExternalLink } from "./ExternalLink";
 
 interface ReleaseCardProps {
   release: Release;
@@ -44,95 +49,93 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
           borderRadius="lg"
           border="1px solid"
           borderColor="gray.200"
-          p={[4, 6]}
+          // p={[4, 6]}
           _dark={{ bg: "gray.800", borderColor: "gray.700" }}
           _hover={{ boxShadow: "lg", transition: "all 0.2s" }}
         >
-         <VStack gap={4} alignItems="start" width="100%">
-           {/* Header with Repository Logo */}
-           <HStack justifyContent="space-between" width="100%" gap={[2, 3]} flexDirection={["column", "row"]} alignItems={["flex-start", "center"]}>
-             <HStack gap={[2, 3]} alignItems="flex-start" flex={1} width={["100%", "auto"]}>
-               {ownerAvatar && (
-                 <Image
-                   src={ownerAvatar}
-                   alt={ownerFromUrl}
-                   width={["32px", "40px"]}
-                   height={["32px", "40px"]}
-                   borderRadius="full"
-                   flexShrink={0}
-                 />
-               )}
-               <VStack gap={1} alignItems="start">
-                <Heading as="h3" size={["sm", "md"]} color="gray.900" _dark={{ color: "gray.100" }}>
+         <VStack gap="0" alignItems="start" width="100%" divideY="1px">
+            <VStack gap={2} p={[4, 6]} width="100%">
+              {/* Header */}
+              <HStack justifyContent="space-between" width="100%" gap={[2, 3]} flexDirection={["column", "row"]} alignItems={["flex-start", "center"]}>
+                  <Heading as="h1" size={["xl", "2xl", "3xl"]} fontWeight="bold" color="gray.900" _dark={{ color: "gray.100" }}>
                     {release.name || release.tag_name}
                   </Heading>
-                  <Text fontSize={["xs", "sm"]} fontFamily="mono" color="gray.600" _dark={{ color: "gray.400" }}>
-                    {release.tag_name}
-                  </Text>
-               </VStack>
-             </HStack>
-             <HStack gap={2} flexShrink={0} width={["100%", "auto"]}>
-               {isPrerelease && <Badge colorScheme="orange" fontSize={["xs", "sm"]}>Pre-release</Badge>}
-               {isDraft && <Badge colorScheme="gray" fontSize={["xs", "sm"]}>Draft</Badge>}
-             </HStack>
-           </HStack>
-
-            {/* Meta Info */}
-            <HStack gap={[2, 4]} width="100%" fontSize={["xs", "sm"]} color="gray.600" _dark={{ color: "gray.400" }} flexWrap="wrap">
-            <Text>
-              {publishDate.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </Text>
-            {release.author && (
-              <HStack gap={2}>
-                <Box
-                  as="img"
-                  {...{
-                    src: release.author.avatar_url,
-                    alt: release.author.login,
-                  }}
-                  width="24px"
-                  height="24px"
-                  borderRadius="full"
-                />
-                <Text>{release.author.login}</Text>
+                <HStack gap={2} flexShrink={0} width={["100%", "auto"]}>
+                  {isPrerelease && <Badge colorScheme="orange" fontSize={["xs", "sm"]}>Pre-release</Badge>}
+                  {isDraft && <Badge colorScheme="gray" fontSize={["xs", "sm"]}>Draft</Badge>}
+                </HStack>
               </HStack>
-            )}
-          </HStack>
 
-            {release.body ? (<ReleaseMarkdown text={release.body} owner={ownerFromUrl} repo={repoFromUrl} limitHeight />) : (<Text color="gray.600" _dark={{ color: "gray.400" }}>No release notes provided.</Text>)}
+                {/* Meta Info */}
+              <HStack gap={[2, 4]} width="100%" fontSize={["xs", "sm"]} color="gray.600" _dark={{ color: "gray.400" }} flexWrap="wrap">
+                <HStack gap={4}>
+                    {release.author && (
+                        <HStack gap={1}>
+                          <Box
+                            as="img"
+                            {...{
+                              src: release.author.avatar_url,
+                              alt: release.author.login,
+                            }}
+                            width="24px"
+                            height="24px"
+                            borderRadius="full"
+                          />
+                          <ExternalLink href={'https://github.com/' + owner}>
+                            <Text fontWeight="semibold" color="fg.muted">
+                              {release.author.login}
+                            </Text>
+                          </ExternalLink>
+                          
+                          <Text>released this</Text>
+                          <TimeAgo date={publishDate} live={false} />
+                        </HStack>
+                    )}
+                    <HStack gap={1}>
+                      <Icon>
+                        <GoTag />
+                      </Icon>
+                      <Text fontSize={["xs", "sm"]} fontFamily="mono" color="gray.600" _dark={{ color: "gray.400" }}>
+                        {release.tag_name}
+                      </Text>
+                    </HStack>
+                </HStack>
+              </HStack>
+            </VStack>
 
-            {/* Actions */}
-            <HStack gap={[1, 2]} width="100%" pt={4} borderTop="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.700" }} flexWrap={["wrap", "nowrap"]}>
-               <Button size={["xs", "sm"]} variant="outline" onClick={() => setShowFullDialog(true)} display="flex" gap={[1, 2]} fontSize={["xs", "sm"]}>
-                 <Icon as={FaBook} boxSize={[3, 4]} />
-                 <Text display={["none", "inline"]}>View Full</Text>
-               </Button>
-               {!hideAllReleasesButton && (
-                 <Button size={["xs", "sm"]} variant="outline" onClick={() => setShowAllDialog(true)} display="flex" gap={[1, 2]} fontSize={["xs", "sm"]}>
-                   <Icon as={FaList} boxSize={[3, 4]} />
-                   <Text display={["none", "inline"]}>All Releases</Text>
-                 </Button>
-               )}
-               <Button
-                 as="a"
-                 {...{ href: release.html_url, target: "_blank", rel: "noopener noreferrer" }}
-                 size={["xs", "sm"]}
-                 variant="ghost"
-                 ml={["auto", "auto"]}
-                 fontSize={["xs", "sm"]}
-                 fontWeight="semibold"
-                 color="blue.600"
-                 display="flex"
-                 gap={[1, 2]}
-               >
-                 <Text display={["none", "inline"]}>GitHub</Text>
-                 <Icon as={FaGithub} boxSize={[3, 4]} />
-               </Button>
-             </HStack>
+          <Box width="100%" p={[4, 6]}>
+            {release.body ? (<ReleaseMarkdown text={release.body} owner={ownerFromUrl} repo={repoFromUrl} limitHeight />) : (<Text color="fg.muted">No release notes provided.</Text>)}
+          </Box>
+
+          {/* Actions */}
+          <HStack gap={[1, 2]} width="100%" flexWrap={["wrap", "nowrap"]} p={[4, 6]}>
+              <Button size={["xs", "sm"]} variant="outline" onClick={() => setShowFullDialog(true)} display="flex" gap={[1, 2]} fontSize={["xs", "sm"]}>
+                <Icon as={FaBook} boxSize={[3, 4]} />
+                <Text display={["none", "inline"]}>View Full</Text>
+              </Button>
+              {!hideAllReleasesButton && (
+                <Button size={["xs", "sm"]} variant="outline" onClick={() => setShowAllDialog(true)} display="flex" gap={[1, 2]} fontSize={["xs", "sm"]}>
+                  <Icon as={FaList} boxSize={[3, 4]} />
+                  <Text display={["none", "inline"]}>All Releases</Text>
+                </Button>
+              )}
+              <Button
+                as="a"
+                {...{ href: release.html_url, target: "_blank", rel: "noopener noreferrer" }}
+                size={["xs", "sm"]}
+                variant="ghost"
+                ml={["auto", "auto"]}
+                fontSize={["xs", "sm"]}
+                fontWeight="semibold"
+                color="blue.500"
+                _dark={{color: "blue.400"}}
+                display="flex"
+                gap={[1, 2]}
+              >
+                <Text display={["none", "inline"]}>GitHub</Text>
+                <Icon as={FaGithub} boxSize={[3, 4]} />
+              </Button>
+            </HStack>
         </VStack>
       </Box>
 

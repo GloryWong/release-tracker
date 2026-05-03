@@ -175,17 +175,9 @@ export function AllReleasesDialog({ owner, repo, isOpen, onClose }: AllReleasesD
               </Box>
             )}
 
-            {releases.map((release, idx) => (
+            {releases.map((release) => (
               <Box
                 key={release.tag_name}
-                pb={6}
-                borderBottom="1px solid"
-                borderColor="gray.200"
-                _dark={{ borderColor: "gray.700" }}
-                _last={{
-                  borderBottom: "none",
-                  pb: 0,
-                }}
               >
                 <ReleaseCard release={release} repoUrl={repoUrl} owner={owner} repo={repo} hideAllReleasesButton={true} />
               </Box>

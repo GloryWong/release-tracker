@@ -3,6 +3,8 @@ import { ReleaseCard } from "./ReleaseCard";
 import {
   Box,
   Heading,
+  HStack,
+  Image,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -74,18 +76,28 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
 
            return (
              <Box key={`${item.owner}/${item.repo}`}>
-               <Box mb={4}>
+               <HStack mb={4}>
+                  {item.ownerAvatar && (
+                    <Image
+                      src={item.ownerAvatar}
+                      alt={item.owner}
+                      width={"30px"}
+                      height={"30px"}
+                      borderRadius="full"
+                      flexShrink={0}
+                    />
+                  )}
                  <Heading
                    as="a"
-                   {...{ href: repoUrl, target: "_blank", rel: "noopener noreferrer" }}
-                    size="md"
+                   {...{ href: repoUrl, target: "_blank", rel: "noopener noreferrer nofollow" }}
+                    size="xl"
                     color="blue.600"
                     _dark={{ color: "blue.400" }}
                     _hover={{ textDecoration: "underline" }}
                   >
                     {item.owner}/{item.repo}
                   </Heading>
-               </Box>
+               </HStack>
                <ReleaseCard 
                  release={item.release} 
                  repoUrl={repoUrl} 
