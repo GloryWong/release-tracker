@@ -34,67 +34,72 @@ export function AllReleasesDialog({ owner, repo, isOpen, ownerAvatar, onClose }:
   const repoUrl = `https://github.com/${owner}/${repo}`
 
   // Fetch releases using client-side fetch with token support
-  const fetchReleases = useCallback(async (pageNum: number) => {
-    if (isLoading || !hasMore)
-      return
+  const fetchReleases = useCallback(
+    async (pageNum: number) => {
+      if (isLoading || !hasMore)
+        return
 
-    setIsLoading(true)
-    setError(null)
+      setIsLoading(true)
+      setError(null)
 
-    try {
-      // Try to get token from environment via a hidden API endpoint
-      const headers: HeadersInit = {
-        Accept: 'application/vnd.github.v3+json',
-      }
-
-      // Try fetching with authentication if available
       try {
-        const authResponse = await fetch('/api/github-token', { method: 'GET' })
-        if (authResponse.ok) {
-          const { token } = await authResponse.json()
-          if (token) {
-            headers.Authorization = `token ${token}`
+        // Try to get token from environment via a hidden API endpoint
+        const headers: HeadersInit = {
+          Accept: 'application/vnd.github.v3+json',
+        }
+
+        // Try fetching with authentication if available
+        try {
+          const authResponse = await fetch('/api/github-token', {
+            method: 'GET',
+          })
+          if (authResponse.ok) {
+            const { token } = await authResponse.json()
+            if (token) {
+              headers.Authorization = `token ${token}`
+            }
           }
         }
+        catch {
+          // Token endpoint not available, continue without auth
+        }
+
+        const response = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}/releases?per_page=10&page=${pageNum}`,
+          { headers, cache: 'no-store' },
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch releases')
+        }
+
+        const data: Release[] = await response.json()
+
+        if (data.length === 0) {
+          setHasMore(false)
+        }
+        else {
+          setReleases(prev => [...prev, ...data])
+          setPage(pageNum + 1)
+        }
       }
-      catch {
-        // Token endpoint not available, continue without auth
-      }
-
-      const response = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/releases?per_page=10&page=${pageNum}`,
-        { headers, cache: 'no-store' },
-      )
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch releases')
-      }
-
-      const data: Release[] = await response.json()
-
-      if (data.length === 0) {
+      catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
         setHasMore(false)
       }
-      else {
-        setReleases(prev => [...prev, ...data])
-        setPage(pageNum + 1)
+      finally {
+        setIsLoading(false)
       }
-    }
-    catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
-      setHasMore(false)
-    }
-    finally {
-      setIsLoading(false)
-    }
-  }, [isLoading, hasMore])
+    },
+    [isLoading, hasMore, owner, repo],
+  )
 
   // Initial fetch
   useEffect(() => {
     if (isOpen && releases.length === 0) {
       fetchReleases(1)
     }
-  }, [isOpen, fetchReleases])
+  }, [isOpen, fetchReleases, releases.length])
 
   // Intersection Observer for infinite scroll
   useEffect(() => {

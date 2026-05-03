@@ -15,6 +15,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { FaGithub, FaRocket, FaSearch } from 'react-icons/fa'
 import { SiNpm } from 'react-icons/si'
+import { useDebounceValue } from 'usehooks-ts'
 
 interface Repository {
   owner: string
@@ -36,44 +37,6 @@ interface SuggestionItem {
 interface RepositoryFormProps {
   isLoading?: boolean
   sessionCache?: Map<string, any>
-}
-
-// Debounce utility
-function useDebounce<T>(value: T, delay: number) {
-  const [debouncedValue, setDebouncedValue] = useState(value)
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    return () => clearTimeout(handler)
-  }, [value, delay])
-
-  return debouncedValue
-}
-
-// Throttle utility
-function useThrottle<T>(value: T, delay: number) {
-  const [throttledValue, setThrottledValue] = useState(value)
-  const lastRanRef = useRef(Date.now())
-
-  useEffect(() => {
-    const now = Date.now()
-    if (now - lastRanRef.current >= delay) {
-      lastRanRef.current = now
-      setThrottledValue(value)
-    }
-    else {
-      const timer = setTimeout(() => {
-        lastRanRef.current = Date.now()
-        setThrottledValue(value)
-      }, delay - (now - lastRanRef.current))
-      return () => clearTimeout(timer)
-    }
-  }, [value, delay])
-
-  return throttledValue
 }
 
 export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: RepositoryFormProps) {
@@ -104,8 +67,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
     return lastCommaIndex === -1 ? githubInput : githubInput.substring(lastCommaIndex + 1).trim()
   }
 
-  const debouncedGithubInput = useDebounce(getCurrentGithubInput(), 300)
-  const throttledGithubInput = useThrottle(debouncedGithubInput, 1000)
+  const [debouncedGithubInput] = useDebounceValue(getCurrentGithubInput, 500)
 
   // NPM input helpers
   const getCurrentNpmInput = () => {
@@ -113,8 +75,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
     return lastCommaIndex === -1 ? npmInput : npmInput.substring(lastCommaIndex + 1).trim()
   }
 
-  const debouncedNpmInput = useDebounce(getCurrentNpmInput(), 300)
-  const throttledNpmInput = useThrottle(debouncedNpmInput, 1000)
+  const [debouncedNpmInput] = useDebounceValue(getCurrentNpmInput, 500)
 
   // GitHub input change handler
   const handleGithubInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -182,7 +143,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
   // Fetch GitHub suggestions
   const [githubSuggestionsLoading, setGithubSuggestionsLoading] = useState(false)
   useEffect(() => {
-    if (throttledGithubInput.length > 2) {
+    if (debouncedGithubInput.length > 2) {
       const fetchSuggestions = async () => {
         // Cancel previous request
         githubAbortControllerRef.current?.abort()
@@ -191,7 +152,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
 
         try {
           const response = await fetch(
-            `/api/search-github?q=${encodeURIComponent(throttledGithubInput)}`,
+            `/api/search-github?q=${encodeURIComponent(debouncedGithubInput)}`,
             { signal: githubAbortControllerRef.current.signal },
           )
           if (response.ok) {
@@ -218,12 +179,12 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
       setGithubSuggestions([])
       setShowGithubSuggestions(false)
     }
-  }, [throttledGithubInput])
+  }, [debouncedGithubInput])
 
   // Fetch NPM suggestions
   const [npmSuggestionsLoading, setNpmSuggestionsLoading] = useState(false)
   useEffect(() => {
-    if (throttledNpmInput.length > 1) {
+    if (debouncedNpmInput.length > 1) {
       const fetchSuggestions = async () => {
         // Cancel previous request
         npmAbortControllerRef.current?.abort()
@@ -232,7 +193,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
 
         try {
           const response = await fetch(
-            `/api/search-npm?q=${encodeURIComponent(throttledNpmInput)}`,
+            `/api/search-npm?q=${encodeURIComponent(debouncedNpmInput)}`,
             { signal: npmAbortControllerRef.current.signal },
           )
           if (response.ok) {
@@ -259,7 +220,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
       setNpmSuggestions([])
       setShowNpmSuggestions(false)
     }
-  }, [throttledNpmInput])
+  }, [debouncedNpmInput])
 
   // Clear suggestions when form is submitted
   useEffect(() => {

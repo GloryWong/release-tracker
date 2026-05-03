@@ -1,5 +1,6 @@
 import type { Release } from '../lib/github.server'
 import { Box, Button, Heading, HStack, Icon, Text } from '@chakra-ui/react'
+import { useState } from 'react'
 import { FaGithub, FaTimes } from 'react-icons/fa'
 import { GoTag } from 'react-icons/go'
 import TimeAgo from 'react-timeago'
@@ -16,10 +17,10 @@ interface ReleaseDialogProps {
 }
 
 export function ReleaseDialog({ release, repoUrl, owner, repo, isOpen, onClose }: ReleaseDialogProps) {
+  const [publishDate] = useState(() => new Date(release.published_at))
+
   if (!isOpen)
     return null
-
-  const publishDate = new Date(release.published_at)
 
   return (
     <Box
