@@ -44,6 +44,22 @@ interface RepositoryFormProps {
 export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: RepositoryFormProps) {
   const [tabIndex, setTabIndex] = useState(0)
   const [repositories, setRepositories] = useState<Repository[]>([])
+  const setRepos = (repositories: Repository[]) => {
+    const repos: Repository[] = []
+    repositories.forEach((v) => {
+      const existing = repos.find(r => r.source === v.source && r.repo === v.repo && r.owner === v.owner)
+      if (existing) {
+        if (v.ownerAvatar) {
+          repos.splice(repos.findIndex(r => r.repo === existing.repo), 1) // remove existing
+          repos.push(v)
+        }
+      }
+      else {
+        repos.push(v)
+      }
+    })
+    setRepositories(repos)
+  }
 
   // GitHub tab state
   const [githubInput, setGithubInput] = useState('')
@@ -95,7 +111,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
       if (beforeComma && beforeComma.includes('/')) {
         const [owner, repo] = beforeComma.split('/').map(s => s.trim())
         if (owner && repo) {
-          setRepositories([...repositories, { owner, repo, source: 'github' }])
+          setRepos([...repositories, { owner, repo, source: 'github' }])
           setGithubInput('')
           setGithubSuggestions([])
           setShowGithubSuggestions(false)
@@ -126,7 +142,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
       const beforeComma = value.substring(0, lastCommaIndex).trim()
 
       if (beforeComma && beforeComma.length > 0) {
-        setRepositories([...repositories, { owner: 'npm', repo: beforeComma, packageName: beforeComma, source: 'npm' }])
+        setRepos([...repositories, { owner: 'npm', repo: beforeComma, packageName: beforeComma, source: 'npm' }])
         setNpmInput('')
         setNpmSuggestions([])
         setShowNpmSuggestions(false)
@@ -261,7 +277,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
     }
 
     if (newRepos.length > 0) {
-      setRepositories([...repositories, ...newRepos])
+      setRepos([...repositories, ...newRepos])
       setGithubInput('')
       setGithubSuggestions([])
       setShowGithubSuggestions(false)
@@ -285,7 +301,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
     }
 
     if (newPackages.length > 0) {
-      setRepositories([...repositories, ...newPackages])
+      setRepos([...repositories, ...newPackages])
       setNpmInput('')
       setNpmSuggestions([])
       setShowNpmSuggestions(false)
@@ -294,7 +310,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
 
   // Select GitHub suggestion
   const selectGithubSuggestion = (suggestion: SuggestionItem) => {
-    setRepositories([...repositories, { owner: suggestion.owner, repo: suggestion.repo, ownerAvatar: suggestion.ownerAvatar, source: 'github' }])
+    setRepos([...repositories, { owner: suggestion.owner, repo: suggestion.repo, ownerAvatar: suggestion.ownerAvatar, source: 'github' }])
     setGithubInput('')
     setGithubSuggestions([])
     setShowGithubSuggestions(false)
@@ -306,7 +322,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
 
   // Select NPM suggestion
   const selectNpmSuggestion = (suggestion: SuggestionItem) => {
-    setRepositories([...repositories, { owner: 'npm', repo: suggestion.repo, packageName: suggestion.packageName, ownerAvatar: suggestion.ownerAvatar, source: 'npm' }])
+    setRepos([...repositories, { owner: 'npm', repo: suggestion.repo, packageName: suggestion.packageName, ownerAvatar: suggestion.ownerAvatar, source: 'npm' }])
     setNpmInput('')
     setNpmSuggestions([])
     setShowNpmSuggestions(false)
@@ -337,7 +353,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
     }
 
     if (newRepos.length > 0) {
-      setRepositories([...repositories, ...newRepos])
+      setRepos([...repositories, ...newRepos])
       setGithubInput('')
       setGithubSuggestions([])
       setShowGithubSuggestions(false)
@@ -362,7 +378,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
     }
 
     if (newPackages.length > 0) {
-      setRepositories([...repositories, ...newPackages])
+      setRepos([...repositories, ...newPackages])
       setNpmInput('')
       setNpmSuggestions([])
       setShowNpmSuggestions(false)
@@ -469,7 +485,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
 
   // Remove repository
   const removeRepository = (index: number) => {
-    setRepositories(repositories.filter((_, i) => i !== index))
+    setRepos(repositories.filter((_, i) => i !== index))
   }
 
   return (
@@ -541,42 +557,40 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                         boxSize={[4, 5]}
                       />
                     )}
-                {repositories
-                  .filter(r => r.source === 'npm')
-                  .map(repo => (
-                    <Badge
-                      key={repo.packageName}
-                      display="flex"
-                      alignItems="center"
-                      gap={[1, 2]}
-                      px={[2, 3]}
-                      py={1}
-                      borderRadius="md"
-                      bg="red.100"
-                      color="red.900"
-                      _dark={{ bg: 'red.700', color: 'red.100' }}
-                      fontSize={['sm', 'md']}
-                    >
-                      {repo.ownerAvatar && (
-                        <Image
-                          src={repo.ownerAvatar}
-                          alt={repo.packageName}
-                          width="16px"
-                          height="16px"
-                          borderRadius="full"
-                        />
-                      )}
-                      {repo.packageName}
-                      <CloseButton
-                        size="xs"
-                        onClick={() =>
-                          removeRepository(repositories.indexOf(repo))}
-                        disabled={isLoading}
+                {npmRepositories.map(repo => (
+                  <Badge
+                    key={repo.packageName}
+                    display="flex"
+                    alignItems="center"
+                    gap={[1, 2]}
+                    px={[2, 3]}
+                    py={1}
+                    borderRadius="md"
+                    bg="red.100"
+                    color="red.900"
+                    _dark={{ bg: 'red.700', color: 'red.100' }}
+                    fontSize={['sm', 'md']}
+                  >
+                    {repo.ownerAvatar && (
+                      <Image
+                        src={repo.ownerAvatar}
+                        alt={repo.packageName}
+                        width="16px"
+                        height="16px"
                         borderRadius="full"
-                        color="gray"
                       />
-                    </Badge>
-                  ))}
+                    )}
+                    {repo.packageName}
+                    <CloseButton
+                      size="xs"
+                      onClick={() =>
+                        removeRepository(repositories.indexOf(repo))}
+                      disabled={isLoading}
+                      borderRadius="full"
+                      color="gray"
+                    />
+                  </Badge>
+                ))}
                 <Input
                   ref={npmInputRef}
                   type="text"
@@ -728,8 +742,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                         boxSize={[4, 5]}
                       />
                     )}
-                {repositories
-                  .filter(r => r.source === 'github')
+                {githubRepositories
                   .map(repo => (
                     <Badge
                       key={`${repo.owner}/${repo.repo}`}
@@ -929,7 +942,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
           gap={2}
           justifyContent="center"
           fontSize={['sm', 'base']}
-          onClick={() => setRepositories([])}
+          onClick={() => setRepos([])}
         >
           Clear
           {' '}
