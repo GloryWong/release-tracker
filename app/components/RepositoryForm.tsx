@@ -7,12 +7,14 @@ import {
   Icon,
   Image,
   Input,
+  SimpleGrid,
   Spinner,
   Tabs,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
+import { AiOutlineClear } from 'react-icons/ai'
 import { FaGithub, FaRocket, FaSearch } from 'react-icons/fa'
 import { SiNpm } from 'react-icons/si'
 import { useDebounceValue } from 'usehooks-ts'
@@ -892,26 +894,44 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
         value={Array.from(sessionCache.keys()).join(', ')}
       />
 
-      <Button
-        type="submit"
-        disabled={repositories.length === 0}
-        variant="surface"
-        colorPalette="blue"
-        width="100%"
-        size={['md', 'lg']}
-        fontWeight="bold"
-        display="flex"
-        gap={2}
-        justifyContent="center"
-        fontSize={['sm', 'base']}
-        loading={isLoading}
-        loadingText="Fetching..."
-        spinnerPlacement="end"
-      >
-        Fetch Releases
-        {' '}
-        <Icon as={FaRocket} />
-      </Button>
+      <SimpleGrid width="full" columns={[1, 2]} gap={[2, 2, 2, 4]}>
+        <Button
+          type="submit"
+          disabled={repositories.length === 0}
+          variant="surface"
+          colorPalette="blue"
+          size={['md', 'lg']}
+          fontWeight="bold"
+          display="flex"
+          gap={2}
+          justifyContent="center"
+          fontSize={['sm', 'base']}
+          loading={isLoading}
+          loadingText="Fetching..."
+          spinnerPlacement="end"
+        >
+          Fetch Releases
+          {' '}
+          <Icon as={FaRocket} />
+        </Button>
+        <Button
+          type="reset"
+          disabled={isLoading || repositories.length === 0}
+          variant="surface"
+          colorPalette="gray"
+          size={['md', 'lg']}
+          fontWeight="bold"
+          display="flex"
+          gap={2}
+          justifyContent="center"
+          fontSize={['sm', 'base']}
+          onClick={() => setRepositories([])}
+        >
+          Clear
+          {' '}
+          <Icon as={AiOutlineClear} />
+        </Button>
+      </SimpleGrid>
     </VStack>
   )
 }
