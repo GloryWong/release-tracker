@@ -29,7 +29,7 @@ export default function Home() {
   const fetcher = useFetcher<{ repositories?: RepositoryRelease[], alreadyFetched?: [], error?: string }>()
   const [repositories, setRepositories] = useState<RepositoryRelease[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  // const {} = useColorMode()
+  const clearRepositories = () => setRepositories(null)
 
   useEffect(() => {
     if (fetcher.data?.repositories) {
@@ -70,7 +70,7 @@ export default function Home() {
     }
     else if (fetcher.data?.error) {
       setError(fetcher.data.error)
-      setRepositories(null)
+      clearRepositories()
     }
   }, [fetcher.data])
 
@@ -112,7 +112,7 @@ export default function Home() {
             )}
 
             {repositories && (
-              <ReleaseList repositories={repositories} />
+              <ReleaseList repositories={repositories} clearRepositories={clearRepositories} />
             )}
           </VStack>
         </Container>

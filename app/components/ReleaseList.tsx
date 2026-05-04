@@ -3,12 +3,16 @@ import {
   Box,
   Heading,
   HStack,
+  IconButton,
   Image,
+  Separator,
   SimpleGrid,
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { FaTimes } from 'react-icons/fa'
 import { ReleaseCard } from './ReleaseCard'
+import { Tooltip } from './ui/tooltip'
 
 interface RepositoryRelease {
   owner: string
@@ -20,9 +24,10 @@ interface RepositoryRelease {
 
 interface ReleaseListProps {
   repositories: RepositoryRelease[]
+  clearRepositories: () => void
 }
 
-export function ReleaseList({ repositories }: ReleaseListProps) {
+export function ReleaseList({ repositories, clearRepositories }: ReleaseListProps) {
   if (!repositories || repositories.length === 0) {
     return (
       <Box textAlign="center" py={[8, 12]} px={4}>
@@ -37,19 +42,28 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
   }
 
   return (
-    <VStack width="100%" gap={[6, 8, 10]}>
+    <VStack width="full" gap={[6, 8, 10]}>
 
-      <Text width="100%" textAlign="center" color="fg.muted" fontSize={['sm', 'md']}>
-        Showing
-        {' '}
-        {repositories.length}
-        {' '}
-        repositor
-        {repositories.length > 1 ? 'ies' : 'y'}
-        {' '}
-        latest release
-        {repositories.length > 1 ? 's' : ''}
-      </Text>
+      <HStack width="full">
+        <Separator flex="1" />
+        <Text textAlign="center" flexShrink={0} color="fg.muted" fontSize={['sm', 'md']}>
+          Showing
+          {' '}
+          <b>{repositories.length}</b>
+          {' '}
+          repositor
+          {repositories.length > 1 ? 'ies' : 'y'}
+          {' '}
+          Latest Release
+          {repositories.length > 1 ? 's' : ''}
+        </Text>
+        <Tooltip content="Clear releases">
+          <IconButton flexShrink={0} size="xs" variant="ghost" onClick={clearRepositories}>
+            <FaTimes />
+          </IconButton>
+        </Tooltip>
+        <Separator flex="1" />
+      </HStack>
 
       <SimpleGrid columns={repositories.length > 1 ? [1, 1, 1, 2] : 1} gapX="6" gapY={[6, 8]} width="100%">
         {repositories.map((item) => {
