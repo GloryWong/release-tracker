@@ -55,12 +55,11 @@ export const ColorModeButton = React.forwardRef<
 >((props, ref) => {
   const { toggleColorMode } = useColorMode()
   return (
-    <ClientOnly fallback={<Skeleton boxSize="9" />}>
+    <ClientOnly fallback={<Skeleton boxSize="10" />}>
       <IconButton
         onClick={toggleColorMode}
         variant="ghost"
         aria-label="Toggle color mode"
-        size="sm"
         ref={ref}
         {...props}
         css={{

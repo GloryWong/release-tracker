@@ -1,9 +1,11 @@
 import type { Release } from '../lib/github.server'
-import { Box, Container, Heading, HStack, Icon, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Center, ClientOnly, CloseButton, Container, Dialog, Heading, HStack, Icon, IconButton, Portal, QrCode, Skeleton, Text, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
+import { BsQrCode } from 'react-icons/bs'
 import { FaBox } from 'react-icons/fa'
 import { useFetcher } from 'react-router'
 import { ColorModeButton } from '~/components/ui/color-mode'
+import { Tooltip } from '~/components/ui/tooltip'
 import { ReleaseList } from '../components/ReleaseList'
 import { RepositoryForm } from '../components/RepositoryForm'
 
@@ -81,19 +83,30 @@ export default function Home() {
       {/* Header */}
       <Box bg="linear-gradient(to right, #2563eb, #1e40af)" color="white" py={[8, 12]} boxShadow="lg" _dark={{ bg: 'linear-gradient(to right, #1e3a5f, #1a2f4f)' }}>
         <Container>
-          <HStack justifyContent="space-between" alignItems="center" width="100%" mb={4} gap={[2, 4]}>
-            <HStack gap={3} flexWrap="wrap">
-              <Icon as={FaBox} boxSize={[6, 8]} />
-              <Heading as="h1" size={['lg', '2xl']}>
-                Release Tracker
-              </Heading>
-            </HStack>
+          <HStack justifyContent="space-between">
+            <VStack gap={[2, 4, 6]} alignItems="flex-start">
+              <HStack gap={3} flexWrap="wrap">
+                <Icon as={FaBox} boxSize={[6, 8]} />
+                <Heading as="h1" size={['lg', '2xl']}>
+                  Release Tracker
+                </Heading>
+              </HStack>
+              <Text fontSize={['base', 'lg']} opacity={0.95}>
+                Monitor latest releases from your favorite GitHub projects
+              </Text>
+            </VStack>
+            <ClientOnly fallback={<Skeleton boxSize="80px" />}>
+              {() => (
+                <Tooltip content="Scan to share">
+                  <QrCode.Root value={location.href} display={['none', 'none', 'block']} size="sm">
+                    <QrCode.Frame>
+                      <QrCode.Pattern></QrCode.Pattern>
+                    </QrCode.Frame>
+                  </QrCode.Root>
+                </Tooltip>
+              )}
+            </ClientOnly>
           </HStack>
-          <VStack gap={2} alignItems="flex-start">
-            <Text fontSize={['base', 'lg']} opacity={0.95}>
-              Monitor latest releases from your favorite GitHub projects
-            </Text>
-          </VStack>
         </Container>
       </Box>
 
@@ -123,7 +136,50 @@ export default function Home() {
         <Container>
           <HStack justifyContent="space-between" alignContent="center">
             <Text>Made with ❤️ by AI Agent</Text>
-            <ColorModeButton />
+            <HStack>
+              <Dialog.Root
+                placement="center"
+                motionPreset="slide-in-bottom"
+              >
+                <Dialog.Trigger asChild>
+                  <IconButton variant="ghost" aria-label="Show QrCode">
+                    <BsQrCode />
+                  </IconButton>
+                </Dialog.Trigger>
+                <Portal>
+                  <Dialog.Backdrop />
+                  <Dialog.Positioner>
+                    <Dialog.Content>
+                      <Dialog.Header>
+                        <Dialog.Title>Scan to share</Dialog.Title>
+                      </Dialog.Header>
+                      <Dialog.Body>
+                        <Center>
+                          <ClientOnly>
+                            {() => (
+                              <QrCode.Root value={location.href} size="lg">
+                                <QrCode.Frame>
+                                  <QrCode.Pattern></QrCode.Pattern>
+                                </QrCode.Frame>
+                              </QrCode.Root>
+                            )}
+                          </ClientOnly>
+                        </Center>
+                      </Dialog.Body>
+                      <Dialog.Footer>
+                        <Dialog.ActionTrigger asChild>
+                          <Button variant="ghost">Close</Button>
+                        </Dialog.ActionTrigger>
+                      </Dialog.Footer>
+                      <Dialog.CloseTrigger asChild>
+                        <CloseButton />
+                      </Dialog.CloseTrigger>
+                    </Dialog.Content>
+                  </Dialog.Positioner>
+                </Portal>
+              </Dialog.Root>
+              <ColorModeButton />
+            </HStack>
           </HStack>
         </Container>
       </Box>
