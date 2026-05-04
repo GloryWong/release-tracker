@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/GloryWong/release-tracker/compare/v1.1.0...v1.2.0) (2026-05-04)
+
+
+### Features
+
+* add qr code to share this site ([004c08a](https://github.com/GloryWong/release-tracker/commit/004c08aa7c223158e04728ffe35f36f7b84c1728))
+
 ## [1.1.0](https://github.com/GloryWong/release-tracker/compare/v1.0.3...v1.1.0) (2026-05-04)
 
 
