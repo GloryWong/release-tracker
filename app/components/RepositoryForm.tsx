@@ -53,6 +53,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
   const githubSuggestionsRef = useRef<HTMLDivElement>(null)
   const githubInputRef = useRef<HTMLInputElement>(null)
   const githubAbortControllerRef = useRef<AbortController | null>(null)
+  const githubRepositories = repositories.filter(v => v.source === 'github')
 
   // NPM tab state
   const [npmInput, setNpmInput] = useState('')
@@ -62,6 +63,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
   const npmSuggestionsRef = useRef<HTMLDivElement>(null)
   const npmInputRef = useRef<HTMLInputElement>(null)
   const npmAbortControllerRef = useRef<AbortController | null>(null)
+  const npmRepositories = repositories.filter(v => v.source === 'npm')
 
   // GitHub input helpers
   const getCurrentGithubInput = () => {
@@ -487,6 +489,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
             >
               <Icon as={SiNpm} boxSize={[4, 5]} />
               <Text>NPM</Text>
+              <Badge colorPalette={npmRepositories.length > 0 ? 'red' : 'gray'}>{ npmRepositories.length }</Badge>
             </Tabs.Trigger>
             <Tabs.Trigger
               value="1"
@@ -497,6 +500,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
             >
               <Icon as={FaGithub} boxSize={[4, 5]} />
               <Text>GitHub</Text>
+              <Badge colorPalette={githubRepositories.length > 0 ? 'blue' : 'gray'}>{ githubRepositories.length }</Badge>
             </Tabs.Trigger>
           </Tabs.List>
 
