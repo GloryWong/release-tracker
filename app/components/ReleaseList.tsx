@@ -82,20 +82,21 @@ export function ReleaseList({ repositories, clearRepositories }: ReleaseListProp
                     flexShrink={0}
                   />
                 )}
-                <Heading
-                  as="a"
-                  {...{ href: repoUrl, target: '_blank', rel: 'noopener noreferrer nofollow' }}
-                  size="xl"
-                  color="blue.600"
-                  _dark={{ color: 'blue.400' }}
-                  _hover={{ textDecoration: 'underline' }}
-                  flexGrow={1}
-                  truncate
-                >
-                  {item.owner}
-                  /
-                  {item.repo}
-                </Heading>
+                <Box flexGrow={1} minWidth={0} truncate>
+                  <Heading
+                    as="a"
+                    {...{ href: repoUrl, target: '_blank', rel: 'noopener noreferrer nofollow' }}
+                    size="xl"
+                    color="blue.600"
+                    _dark={{ color: 'blue.400' }}
+                    _hover={{ textDecoration: 'underline' }}
+                    maxWidth="full"
+                  >
+                    {item.owner}
+                    /
+                    {item.repo}
+                  </Heading>
+                </Box>
               </HStack>
               <Box flexGrow={1} minHeight={0}>
                 {

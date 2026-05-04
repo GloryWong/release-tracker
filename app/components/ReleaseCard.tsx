@@ -58,7 +58,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
             {/* Header */}
             <HStack justifyContent="space-between" width="full" gap={[2, 3]} alignItems={['center']}>
               <Box flexGrow={1} minW={0}>
-                <ExternalLink href={release.html_url} width="100%">
+                <ExternalLink href={release.html_url} maxWidth="full">
                   <Heading as="h1" width="full" truncate size={['xl', '2xl', '3xl']} fontWeight="bold" color="gray.900" _dark={{ color: 'gray.100' }}>
                     {release.name || release.tag_name}
                   </Heading>
