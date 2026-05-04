@@ -47,19 +47,19 @@ export function ReleaseDialog({ release, repoUrl, owner, repo, isOpen, onClose }
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <Box borderBottom="1px solid" borderColor="gray.200" p={6} _dark={{ borderColor: 'gray.700' }}>
+        <Box borderBottom="1px solid" borderColor="gray.200" p={[4, 6]} _dark={{ borderColor: 'gray.700' }}>
           <HStack justifyContent="space-between" alignItems="center">
-            <ExternalLink href={release.html_url}>
-              <Heading size="lg" color="gray.900" _dark={{ color: 'gray.100' }}>{release.name || release.tag_name}</Heading>
+            <ExternalLink href={release.html_url} overflow="hidden">
+              <Heading size="lg" color="gray.900" _dark={{ color: 'gray.100' }} truncate>{release.name || release.tag_name}</Heading>
             </ExternalLink>
-            <Button variant="ghost" onClick={onClose} minW="auto" h="auto" p={0}>
+            <Button variant="ghost" flexShrink={0} onClick={onClose} minW="auto" h="auto" p={0}>
               <Icon as={FaTimes} />
             </Button>
           </HStack>
         </Box>
 
         {/* Meta */}
-        <Box borderBottom="1px solid" borderColor="gray.200" bg="gray.50" py={4} px={6} _dark={{ borderColor: 'gray.700', bg: 'gray.700' }}>
+        <Box borderBottom="1px solid" borderColor="gray.200" bg="gray.50" py={4} px={[4, 6]} _dark={{ borderColor: 'gray.700', bg: 'gray.700' }}>
           <HStack gap={[2, 4]} fontSize="sm" color="gray.600" _dark={{ color: 'gray.400' }} alignItems="center" flexWrap="wrap">
             <HStack gap={1} alignItems="center">
               <Text>Released</Text>
@@ -85,21 +85,25 @@ export function ReleaseDialog({ release, repoUrl, owner, repo, isOpen, onClose }
                   </Text>
                 </HStack>
               </ExternalLink>
-              {release.prerelease && (
-                <Box px={2} py={1} bg="orange.200" color="orange.800" borderRadius="md" fontSize="xs">
-                  Pre-release
-                </Box>
-              )}
-              {release.draft && (
-                <Box px={2} py={1} bg="bg.emphasized" color="fg.muted" borderRadius="md" fontSize="xs">
-                  Draft
-                </Box>
+              {(release.prerelease || release.draft) && (
+                <HStack gap={1} flexShrink={0}>
+                  {release.prerelease && (
+                    <Box px={2} py={1} bg="orange.subtle" color="orange.fg" borderRadius="md" fontSize={['xs', 'sm']}>
+                      Pre-release
+                    </Box>
+                  )}
+                  {release.draft && (
+                    <Box px={2} py={1} bg="bg.emphasized" color="fg.muted" borderRadius="md" fontSize={['xs', 'sm']}>
+                      Draft
+                    </Box>
+                  )}
+                </HStack>
               )}
             </HStack>
           </HStack>
         </Box>
 
-        <Box flex={1} overflowY="auto" p={6}>
+        <Box flex={1} overflowY="auto" p={[4, 6]}>
           {release.body
             ? (<ReleaseMarkdown text={release.body} owner={owner} repo={repo} />
               )
@@ -109,7 +113,7 @@ export function ReleaseDialog({ release, repoUrl, owner, repo, isOpen, onClose }
         </Box>
 
         {/* Footer */}
-        <Box borderTop="1px solid" borderColor="gray.200" p={6} display="flex" justifyContent="flex-end" gap={2} _dark={{ borderColor: 'gray.700' }}>
+        <Box borderTop="1px solid" borderColor="gray.200" p={[4, 6]} display="flex" justifyContent="flex-end" gap={2} _dark={{ borderColor: 'gray.700' }}>
           <Button
             as="a"
             {...{ href: release.html_url, target: '_blank', rel: 'noopener noreferrer' }}

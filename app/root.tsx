@@ -1,5 +1,5 @@
 import type { Route } from './+types/root'
-import { Box, ChakraProvider, Code, defaultSystem, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Code, Heading, Text, VStack } from '@chakra-ui/react'
 
 import {
   isRouteErrorResponse,
@@ -9,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router'
+import { Provider } from './components/ui/provider'
 import './app.css'
 
 export const links: Route.LinksFunction = () => [
@@ -35,42 +36,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="color-scheme" content="light dark" />
         <Meta />
         <Links />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                // Get stored color mode preference
-                const storedMode = localStorage.getItem('release-tracker-color-mode');
-                
-                let mode = storedMode;
-                
-                // If no stored preference, detect system preference
-                if (!mode) {
-                  mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                }
-                
-                // Apply theme
-                if (mode === 'dark') {
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.style.colorScheme = 'dark';
-                } else {
-                  document.documentElement.classList.remove('dark');
-                  document.documentElement.style.colorScheme = 'light';
-                }
-                
-                // Store preference if not already stored
-                if (!storedMode) {
-                  localStorage.setItem('release-tracker-color-mode', mode);
-                }
-              })();
-            `,
-          }}
-        />
       </head>
       <body>
-        <ChakraProvider value={defaultSystem}>
+        <Provider>
           {children}
-        </ChakraProvider>
+        </Provider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -160,13 +160,13 @@ export function AllReleasesDialog({ owner, repo, isOpen, ownerAvatar, onClose }:
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <Box borderBottom="1px solid" borderColor="gray.200" p={6} _dark={{ borderColor: 'gray.700' }}>
+        <Box borderBottom="1px solid" borderColor="gray.200" p={[4, 6]} _dark={{ borderColor: 'gray.700' }}>
           <HStack justifyContent="space-between" alignItems="start">
-            <VStack width="100%" alignItems="start">
+            <VStack flexGrow={1} minWidth={0} gap={[1, 2]} alignItems="start">
               <Heading size="lg" color="gray.900" _dark={{ color: 'gray.100' }}>
                 All Releases
               </Heading>
-              <HStack>
+              <HStack maxWidth="full">
                 {ownerAvatar && (
                   <Image
                     src={ownerAvatar}
@@ -179,12 +179,14 @@ export function AllReleasesDialog({ owner, repo, isOpen, ownerAvatar, onClose }:
                 )}
                 <ExternalLink
                   href={`https://github.com/${owner}/${repo}`}
+                  overflow="hidden"
                 >
                   <Text
                     fontSize="md"
                     fontWeight="bold"
                     color="blue.600"
                     _dark={{ color: 'blue.400' }}
+                    truncate
                   >
                     {owner}
                     /
@@ -200,7 +202,7 @@ export function AllReleasesDialog({ owner, repo, isOpen, ownerAvatar, onClose }:
         </Box>
 
         {/* Body */}
-        <Box flex={1} overflowY="auto" p={6}>
+        <Box flex={1} overflowY="auto" p={[4, 6]}>
           <VStack gap={4} align="stretch">
             {error && (
               <Box p={4} bg="red.50" borderRadius="md" border="1px solid" borderColor="red.200" color="red.800" _dark={{ bg: 'red.900', borderColor: 'red.700', color: 'red.200' }}>
@@ -218,7 +220,7 @@ export function AllReleasesDialog({ owner, repo, isOpen, ownerAvatar, onClose }:
               <Box
                 key={release.tag_name}
               >
-                <ReleaseCard release={release} repoUrl={repoUrl} owner={owner} repo={repo} hideAllReleasesButton={true} />
+                <ReleaseCard release={release} repoUrl={repoUrl} owner={owner} repo={repo} hideAllReleasesButton={true} height={['300px', '350px']} />
               </Box>
             ))}
 
@@ -240,7 +242,7 @@ export function AllReleasesDialog({ owner, repo, isOpen, ownerAvatar, onClose }:
         </Box>
 
         {/* Footer */}
-        <Box borderTop="1px solid" borderColor="gray.200" p={6} display="flex" justifyContent="flex-end" gap={2} _dark={{ borderColor: 'gray.700' }}>
+        <Box borderTop="1px solid" borderColor="gray.200" p={[4, 6]} display="flex" justifyContent="flex-end" gap={2} _dark={{ borderColor: 'gray.700' }}>
           <Button onClick={handleClose} colorScheme="blue">
             Close
           </Button>

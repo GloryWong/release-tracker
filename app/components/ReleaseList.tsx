@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Image,
+  SimpleGrid,
   Text,
   VStack,
 } from '@chakra-ui/react'
@@ -50,13 +51,13 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
         {repositories.length > 1 ? 's' : ''}
       </Text>
 
-      <VStack gap={[6, 8, 10]} alignItems="stretch" width="100%">
+      <SimpleGrid columns={repositories.length > 1 ? [1, 1, 1, 2] : 1} gapX="6" gapY={[6, 8]} width="100%">
         {repositories.map((item) => {
           const repoUrl = `https://github.com/${item.owner}/${item.repo}`
 
           return (
-            <Box key={`${item.owner}/${item.repo}`}>
-              <HStack mb={4}>
+            <Box key={`${item.owner}/${item.repo}`} height={['300px', '380px', '380px', '450px']} display="flex" flexDirection="column">
+              <HStack mb={[2, 4]}>
                 {item.ownerAvatar && (
                   <Image
                     src={item.ownerAvatar}
@@ -74,44 +75,52 @@ export function ReleaseList({ repositories }: ReleaseListProps) {
                   color="blue.600"
                   _dark={{ color: 'blue.400' }}
                   _hover={{ textDecoration: 'underline' }}
+                  flexGrow={1}
+                  truncate
                 >
                   {item.owner}
                   /
                   {item.repo}
                 </Heading>
               </HStack>
-              {
-                (item.error || !item.release)
-                  ? (
-                      <Box
-                        textAlign="center"
-                        py={8}
-                        px={4}
-                        bg="gray.100"
-                        borderRadius="lg"
-                        border="1px solid"
-                        borderColor="gray.200"
-                        _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
-                      >
-                        <Text color="fg.muted">
-                          {item.error || 'No releases found'}
-                        </Text>
-                      </Box>
-                    )
-                  : (
-                      <ReleaseCard
-                        release={item.release}
-                        repoUrl={repoUrl}
-                        owner={item.owner}
-                        repo={item.repo}
-                        ownerAvatar={item.ownerAvatar}
-                      />
-                    )
-              }
+              <Box flexGrow={1} minHeight={0}>
+                {
+                  (item.error || !item.release)
+                    ? (
+                        <Box
+                          py={8}
+                          px={4}
+                          bg="white"
+                          borderRadius="lg"
+                          border="1px solid"
+                          borderColor="gray.200"
+                          _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
+                          height="100%"
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <Text color="fg.muted">
+                            {item.error || 'No releases found'}
+                          </Text>
+                        </Box>
+                      )
+                    : (
+                        <ReleaseCard
+                          release={item.release}
+                          repoUrl={repoUrl}
+                          owner={item.owner}
+                          repo={item.repo}
+                          ownerAvatar={item.ownerAvatar}
+                          height="full"
+                        />
+                      )
+                }
+              </Box>
             </Box>
           )
         })}
-      </VStack>
+      </SimpleGrid>
     </VStack>
   )
 }

@@ -1,8 +1,9 @@
 import type { Release } from '../lib/github.server'
-import { Box, Button, ClientOnly, Container, Heading, HStack, Icon, Skeleton, Text, VStack } from '@chakra-ui/react'
+import { Box, Container, Heading, HStack, Icon, Text, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { FaBox, FaMoon, FaSun } from 'react-icons/fa'
+import { FaBox } from 'react-icons/fa'
 import { useFetcher } from 'react-router'
+import { ColorModeButton } from '~/components/ui/color-mode'
 import { ReleaseList } from '../components/ReleaseList'
 import { RepositoryForm } from '../components/RepositoryForm'
 
@@ -28,28 +29,7 @@ export default function Home() {
   const fetcher = useFetcher<{ repositories?: RepositoryRelease[], alreadyFetched?: [], error?: string }>()
   const [repositories, setRepositories] = useState<RepositoryRelease[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [colorMode, setColorMode] = useState<'light' | 'dark'>('light')
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark')
-    setColorMode(isDark ? 'dark' : 'light')
-  }, [])
-
-  const toggleColorMode = () => {
-    const isDark = document.documentElement.classList.contains('dark')
-    if (isDark) {
-      document.documentElement.classList.remove('dark')
-      document.documentElement.style.colorScheme = 'light'
-      localStorage.setItem('release-tracker-color-mode', 'light')
-      setColorMode('light')
-    }
-    else {
-      document.documentElement.classList.add('dark')
-      document.documentElement.style.colorScheme = 'dark'
-      localStorage.setItem('release-tracker-color-mode', 'dark')
-      setColorMode('dark')
-    }
-  }
+  // const {} = useColorMode()
 
   useEffect(() => {
     if (fetcher.data?.repositories) {
@@ -99,30 +79,15 @@ export default function Home() {
   return (
     <Box minH="100vh" display="flex" flexDirection="column" bg="white" _dark={{ bg: 'gray.950' }}>
       {/* Header */}
-      <Box bg="linear-gradient(to right, #2563eb, #1e40af)" color="white" py={[8, 12]} px={4} boxShadow="lg" _dark={{ bg: 'linear-gradient(to right, #1e3a5f, #1a2f4f)' }}>
-        <Container maxW="4xl">
-          <HStack justifyContent="space-between" width="100%" mb={4} gap={[2, 4]}>
+      <Box bg="linear-gradient(to right, #2563eb, #1e40af)" color="white" py={[8, 12]} boxShadow="lg" _dark={{ bg: 'linear-gradient(to right, #1e3a5f, #1a2f4f)' }}>
+        <Container>
+          <HStack justifyContent="space-between" alignItems="center" width="100%" mb={4} gap={[2, 4]}>
             <HStack gap={3} flexWrap="wrap">
               <Icon as={FaBox} boxSize={[6, 8]} />
               <Heading as="h1" size={['lg', '2xl']}>
                 Release Tracker
               </Heading>
             </HStack>
-            <ClientOnly fallback={<Skeleton width="46px" height="36px" sm={{ width: '95px', height: '40px' }} bgColor="transparent" />}>
-              <Button
-                onClick={toggleColorMode}
-                variant="ghost"
-                color="gray"
-                size={['sm', 'md']}
-                display="flex"
-                gap={2}
-                whiteSpace="nowrap"
-                flexShrink={0}
-              >
-                <Icon as={colorMode === 'dark' ? FaSun : FaMoon} />
-                <Text display={['none', 'inline']}>{colorMode === 'dark' ? 'Light' : 'Dark'}</Text>
-              </Button>
-            </ClientOnly>
           </HStack>
           <VStack gap={2} alignItems="flex-start">
             <Text fontSize={['base', 'lg']} opacity={0.95}>
@@ -133,8 +98,8 @@ export default function Home() {
       </Box>
 
       {/* Main Content */}
-      <Box flex={1} py={[6, 8]} px={4}>
-        <Container maxW={['100%', '4xl']} px={[2, 4]}>
+      <Box flex={1} py={[6, 8]}>
+        <Container>
           <VStack gap={[6, 8, 10]} alignItems="stretch">
             <fetcher.Form method="post" action="/api/fetch-releases">
               <RepositoryForm isLoading={isLoading} sessionCache={sessionFetchCache} />
@@ -154,8 +119,13 @@ export default function Home() {
       </Box>
 
       {/* Footer */}
-      <Box bg="gray.100" color="gray.700" textAlign="center" py={[4, 6]} borderTop="1px solid" borderColor="gray.300" mt={12} _dark={{ bg: 'gray.800', color: 'gray.300', borderColor: 'gray.700' }} fontSize={['xs', 'sm']}>
-        <Text>Made with ❤️ by AI Agent based on Claude Haiku 4.5</Text>
+      <Box color="fg.subtle" py={[2, 4]} borderTop="1px solid" borderColor="border" mt={12} fontSize={['xs', 'sm']}>
+        <Container>
+          <HStack justifyContent="space-between" alignContent="center">
+            <Text>Made with ❤️ by AI Agent</Text>
+            <ColorModeButton />
+          </HStack>
+        </Container>
       </Box>
     </Box>
   )
