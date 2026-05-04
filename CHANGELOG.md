@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.0](https://github.com/GloryWong/release-tracker/compare/v1.0.3...v1.1.0) (2026-05-04)
+
+
+### Features
+
+* **form:** add clear feature ([4dbc13d](https://github.com/GloryWong/release-tracker/commit/4dbc13de7eae754ab9fc71965e473f10f12a83c3))
+* **form:** add number of repos badges in the tabs ([52d7171](https://github.com/GloryWong/release-tracker/commit/52d7171c203d1424f53dce8584fe5ea352013e2b))
+
+
+### Bug Fixes
+
+* badge key ([f4cbf20](https://github.com/GloryWong/release-tracker/commit/f4cbf20b482504fe07460d2e16b088a185d928c0))
+* **deps:** update all non-major dependencies ([#7](https://github.com/GloryWong/release-tracker/issues/7)) ([6af7563](https://github.com/GloryWong/release-tracker/commit/6af75633c13cb83c76f20aa41c7360a3db1d1a8f))
+* **form:** deduplicate badges ([47f13a4](https://github.com/GloryWong/release-tracker/commit/47f13a4580d35fbdf5f0d5828188c7454d054dee))
+* link widths ([433df4f](https://github.com/GloryWong/release-tracker/commit/433df4fd2ad83cabaa601ca317a29b11d81e0109))
+* release card layout ([662f122](https://github.com/GloryWong/release-tracker/commit/662f122a7b110b2a9d58a2b893c59b70bbd995ad))
+* **release list:** add clearing releases ([bf2f93c](https://github.com/GloryWong/release-tracker/commit/bf2f93cc1b6f61735b9fc5b55dc7f72781ff65d6))
+
 ## [1.0.3](https://github.com/GloryWong/release-tracker/compare/v1.0.2...v1.0.3) (2026-05-03)
 
 
