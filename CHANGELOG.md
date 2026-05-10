@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/GloryWong/release-tracker/compare/v1.2.0...v1.2.1) (2026-05-10)
+
+
+### Bug Fixes
+
+* replace forwardRef ([59e79a2](https://github.com/GloryWong/release-tracker/commit/59e79a21de744a2c4b812c8a0c032eb0c5a83a19))
+
 ## [1.2.0](https://github.com/GloryWong/release-tracker/compare/v1.1.0...v1.2.0) (2026-05-04)
 
 
