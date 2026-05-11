@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.2](https://github.com/GloryWong/release-tracker/compare/v1.2.1...v1.2.2) (2026-05-11)
+
+
+### Bug Fixes
+
+* optimize api ([0454585](https://github.com/GloryWong/release-tracker/commit/04545856d8f05572adf9ee6ed032f0832f72b8f1))
+* use github api sdk - octokit ([3c86d42](https://github.com/GloryWong/release-tracker/commit/3c86d421a005d9679ed01f238b3febd4f2fcc6f7))
+* utilize the in-memory cache ([dd6eb23](https://github.com/GloryWong/release-tracker/commit/dd6eb23e24683b70ed4f8ded78a633454fed9941))
+
 ## [1.2.1](https://github.com/GloryWong/release-tracker/compare/v1.2.0...v1.2.1) (2026-05-10)
 
 
