@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/GloryWong/release-tracker/compare/v1.2.2...v1.2.3) (2026-05-11)
+
+
+### Bug Fixes
+
+* ownerAvatar ([b407a7d](https://github.com/GloryWong/release-tracker/commit/b407a7db646a3dfe3aade27a77967b7673c5c54d))
+
 ## [1.2.2](https://github.com/GloryWong/release-tracker/compare/v1.2.1...v1.2.2) (2026-05-11)
 
 
