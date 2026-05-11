@@ -1,3 +1,5 @@
+import { getCached, setCache } from '~/utils/cache'
+
 interface Release {
   tag_name: string
   name: string
@@ -38,23 +40,6 @@ interface OwnerInfo {
 }
 
 const GITHUB_API_BASE = 'https://api.github.com'
-
-// Simple in-memory cache with TTL (5 minutes)
-const cache = new Map<string, { data: any, timestamp: number }>()
-const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
-
-function getCached(key: string): any | null {
-  const entry = cache.get(key)
-  if (entry && Date.now() - entry.timestamp < CACHE_TTL) {
-    return entry.data
-  }
-  cache.delete(key)
-  return null
-}
-
-function setCache(key: string, data: any): void {
-  cache.set(key, { data, timestamp: Date.now() })
-}
 
 async function getLatestRelease(
   owner: string,
