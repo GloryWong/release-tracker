@@ -23,12 +23,12 @@ interface RepositoryRelease {
 }
 
 interface ReleaseListProps {
-  repositories: RepositoryRelease[]
-  clearRepositories: () => void
+  repositoryReleases: RepositoryRelease[]
+  clearRepositoryReleases: () => void
 }
 
-export function ReleaseList({ repositories, clearRepositories }: ReleaseListProps) {
-  if (!repositories || repositories.length === 0) {
+export function ReleaseList({ repositoryReleases, clearRepositoryReleases }: ReleaseListProps) {
+  if (!repositoryReleases || repositoryReleases.length === 0) {
     return (
       <Box textAlign="center" py={[8, 12]} px={4}>
         <Heading as="h3" size={['md', 'lg']} mb={3} color="gray.900" _dark={{ color: 'gray.100' }}>
@@ -49,24 +49,24 @@ export function ReleaseList({ repositories, clearRepositories }: ReleaseListProp
         <Text textAlign="center" flexShrink={0} color="fg.muted" fontSize={['sm', 'md']}>
           Showing
           {' '}
-          <b>{repositories.length}</b>
+          <b>{repositoryReleases.length}</b>
           {' '}
           repositor
-          {repositories.length > 1 ? 'ies' : 'y'}
+          {repositoryReleases.length > 1 ? 'ies' : 'y'}
           {' '}
           Latest Release
-          {repositories.length > 1 ? 's' : ''}
+          {repositoryReleases.length > 1 ? 's' : ''}
         </Text>
         <Tooltip content="Clear releases">
-          <IconButton flexShrink={0} size="xs" variant="ghost" onClick={clearRepositories}>
+          <IconButton flexShrink={0} size="xs" variant="ghost" onClick={clearRepositoryReleases}>
             <FaTimes />
           </IconButton>
         </Tooltip>
         <Separator flex="1" />
       </HStack>
 
-      <SimpleGrid columns={repositories.length > 1 ? [1, 1, 1, 2] : 1} gapX="6" gapY={[6, 8]} width="100%">
-        {repositories.map((item) => {
+      <SimpleGrid columns={repositoryReleases.length > 1 ? [1, 1, 1, 2] : 1} gapX="6" gapY={[6, 8]} width="100%">
+        {repositoryReleases.map((item) => {
           const repoUrl = `https://github.com/${item.owner}/${item.repo}`
 
           return (

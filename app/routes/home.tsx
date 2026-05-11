@@ -28,15 +28,15 @@ interface RepositoryRelease {
 const sessionFetchCache = new Map<string, RepositoryRelease>()
 
 export default function Home() {
-  const fetcher = useFetcher<{ repositories?: RepositoryRelease[], alreadyFetched?: [], error?: string }>()
-  const [repositories, setRepositories] = useState<RepositoryRelease[] | null>(null)
+  const fetcher = useFetcher<{ repositoryReleases?: RepositoryRelease[], alreadyFetched?: [], error?: string }>()
+  const [repositoryReleases, setRepositoryReleases] = useState<RepositoryRelease[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const clearRepositories = () => setRepositories(null)
+  const clearRepositoryReleases = () => setRepositoryReleases(null)
 
   useEffect(() => {
-    if (fetcher.data?.repositories) {
+    if (fetcher.data?.repositoryReleases) {
       // Cache newly fetched releases in session cache
-      for (const repo of fetcher.data.repositories) {
+      for (const repo of fetcher.data.repositoryReleases) {
         const key = `${repo.owner}/${repo.repo}`
         if (repo.release || !repo.error) {
           sessionFetchCache.set(key, repo)
@@ -56,7 +56,7 @@ export default function Home() {
       // Deduplicate repositories by owner+repo combination
       // Keep the first occurrence (GitHub takes priority over NPM)
       const seen = new Set<string>()
-      const deduplicated = [...alreadyReleases, ...fetcher.data.repositories].filter((repo) => {
+      const deduplicated = [...alreadyReleases, ...fetcher.data.repositoryReleases].filter((repo) => {
         const key = `${repo.owner}/${repo.repo}`
         if (seen.has(key)) {
           return false
@@ -65,14 +65,14 @@ export default function Home() {
         return true
       })
 
-      setRepositories(deduplicated)
+      setRepositoryReleases(deduplicated)
       setError(null)
       // Force a re-render to reset the form component
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
     else if (fetcher.data?.error) {
       setError(fetcher.data.error)
-      clearRepositories()
+      clearRepositoryReleases()
     }
   }, [fetcher.data])
 
@@ -124,8 +124,8 @@ export default function Home() {
               </Box>
             )}
 
-            {repositories && (
-              <ReleaseList repositories={repositories} clearRepositories={clearRepositories} />
+            {repositoryReleases && (
+              <ReleaseList repositoryReleases={repositoryReleases} clearRepositoryReleases={clearRepositoryReleases} />
             )}
           </VStack>
         </Container>
