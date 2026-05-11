@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/GloryWong/release-tracker/compare/v1.2.3...v1.3.0) (2026-05-11)
+
+
+### Features
+
+* **release list:** add npm package link ([ac6f698](https://github.com/GloryWong/release-tracker/commit/ac6f698efc8f9eedb0d3507552c0d2dbd1c6d91f))
+
+
+### Bug Fixes
+
+* layout ([65aa05b](https://github.com/GloryWong/release-tracker/commit/65aa05b6c3e008bf9db50abe7ed8754d1f792b41))
+
 ## [1.2.3](https://github.com/GloryWong/release-tracker/compare/v1.2.2...v1.2.3) (2026-05-11)
 
 
