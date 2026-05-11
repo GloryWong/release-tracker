@@ -37,9 +37,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return { error: 'Not found' }
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs): Promise<{
+  repositoryReleases: any[]
+  alreadyFetched: any[]
+  error?: string
+}> {
+  const _alreadyFetched: any[] = []
+
   if (request.method !== 'POST') {
-    return { error: 'Method not allowed' }
+    return { error: 'Method not allowed', repositoryReleases: [], alreadyFetched: _alreadyFetched }
   }
 
   const formData = await request.formData()
@@ -47,7 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const alreadyFetchedStr = formData.get('alreadyFetched') as string
 
   if (!repositoriesStr || repositoriesStr.trim().length === 0) {
-    return { error: 'Please add at least one repository', repositories: [] }
+    return { error: 'Please add at least one repository', repositoryReleases: [], alreadyFetched: _alreadyFetched }
   }
 
   // Parse already fetched repos from session cache
@@ -66,11 +72,10 @@ export async function action({ request }: ActionFunctionArgs) {
     .filter(item => item.length > 0)
 
   if (items.length === 0) {
-    return { error: 'Invalid format. Use owner/repo for GitHub or package-name for NPM', repositories: [] }
+    return { error: 'Invalid format. Use owner/repo for GitHub or package-name for NPM', repositoryReleases: [], alreadyFetched: _alreadyFetched }
   }
 
   const results: any[] = []
-  const _alreadyFetched: any[] = []
 
   for (const item of items) {
     // Check if it's a scoped npm package (@scope/name) or a GitHub repo (owner/repo)
@@ -206,5 +211,5 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   }
 
-  return { repositories: results, alreadyFetched: _alreadyFetched }
+  return { repositoryReleases: results, alreadyFetched: _alreadyFetched }
 }

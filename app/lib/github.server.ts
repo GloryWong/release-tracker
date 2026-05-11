@@ -1,19 +1,9 @@
+import type { Octokit } from 'octokit'
+import type { AsyncReturnType } from 'type-fest'
 import { getCached, setCache } from '~/utils/cache'
+import { octokit } from './octokit.server'
 
-interface Release {
-  tag_name: string
-  name: string
-  draft: boolean
-  prerelease: boolean
-  published_at: string
-  body: string
-  html_url: string
-  author: {
-    login: string
-    avatar_url: string
-  }
-  status?: string
-}
+type Release = AsyncReturnType<Octokit['rest']['repos']['getLatestRelease']>['data']
 
 interface NPMRelease {
   version: string
@@ -39,8 +29,6 @@ interface OwnerInfo {
   avatar_url: string
 }
 
-const GITHUB_API_BASE = 'https://api.github.com'
-
 async function getLatestRelease(
   owner: string,
   repo: string,
@@ -51,26 +39,20 @@ async function getLatestRelease(
     return cached
   }
 
-  const token = process.env.GITHUB_TOKEN
-  const headers: HeadersInit = {
-    Accept: 'application/vnd.github.v3+json',
-  }
-
-  if (token) {
-    headers.Authorization = `token ${token}`
-  }
-
   try {
-    const response = await fetch(
-      `${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/latest`,
-      { headers, cache: 'no-store' },
-    )
+    const response = await octokit.rest.repos.getLatestRelease({
+      owner,
+      repo,
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    })
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       return null
     }
 
-    const release: Release = await response.json()
+    const release = response.data
     setCache(cacheKey, release)
     return release
   }
@@ -90,22 +72,16 @@ async function validateRepository(
     return cached
   }
 
-  const token = process.env.GITHUB_TOKEN
-  const headers: HeadersInit = {
-    Accept: 'application/vnd.github.v3+json',
-  }
-
-  if (token) {
-    headers.Authorization = `token ${token}`
-  }
-
   try {
-    const response = await fetch(
-      `${GITHUB_API_BASE}/repos/${owner}/${repo}`,
-      { headers, cache: 'no-store' },
-    )
+    const response = await octokit.rest.repos.get({
+      owner,
+      repo,
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    })
 
-    const isValid = response.ok
+    const isValid = response.status === 200
     setCache(cacheKey, isValid)
     return isValid
   }
@@ -131,22 +107,26 @@ async function searchRepositories(query: string, limit: number = 10): Promise<Ar
   }
 
   try {
-    const response = await fetch(
-      `${GITHUB_API_BASE}/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=${limit}`,
-      { headers, cache: 'no-store' },
-    )
+    const response = await octokit.rest.search.repos({
+      q: query,
+      sort: 'stars',
+      per_page: limit,
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    })
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       return null
     }
 
-    const data: any = await response.json()
-    const results = data.items.map((item: any) => ({
-      owner: item.owner.login,
+    const data = response.data
+    const results = data.items.map(item => ({
+      owner: item.owner?.login ?? 'Unknown',
       repo: item.name,
       description: item.description || '',
       url: item.html_url,
-      ownerAvatar: item.owner.avatar_url,
+      ownerAvatar: item.owner?.avatar_url ?? 'https://www.gravatar.com/avatar/npm?d=identicon',
     }))
     setCache(cacheKey, results)
     return results
@@ -174,16 +154,18 @@ async function getOwnerInfo(owner: string): Promise<OwnerInfo | null> {
   }
 
   try {
-    const response = await fetch(
-      `${GITHUB_API_BASE}/users/${owner}`,
-      { headers, cache: 'no-store' },
-    )
+    const response = await octokit.rest.users.getByUsername({
+      username: owner,
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    })
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       return null
     }
 
-    const data: any = await response.json()
+    const data = response.data
     const ownerInfo = {
       login: data.login,
       avatar_url: data.avatar_url,
