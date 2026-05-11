@@ -1,4 +1,4 @@
-import type { Release } from '../lib/github.server'
+import type { RepositoryRelease } from '../components/ReleaseList'
 import { Box, Button, Center, ClientOnly, CloseButton, Container, Dialog, Heading, HStack, Icon, IconButton, Portal, QrCode, Skeleton, Text, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { BsQrCode } from 'react-icons/bs'
@@ -14,14 +14,6 @@ export function meta() {
     { title: 'Release Tracker - GitHub Release Info' },
     { name: 'description', content: 'Check latest release information for GitHub projects' },
   ]
-}
-
-interface RepositoryRelease {
-  owner: string
-  repo: string
-  release: Release | null
-  error?: string
-  ownerAvatar?: string
 }
 
 // Session-level cache for already fetched releases

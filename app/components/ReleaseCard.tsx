@@ -38,7 +38,7 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
   const ownerFromUrl = owner || repoUrl.split('/')[repoUrl.split('/').length - 2]
   const repoFromUrl = repo || repoUrl.split('/')[repoUrl.split('/').length - 1]
 
-  const [publishDate] = useState(() => new Date(release.published_at))
+  const [publishDate] = useState(() => release.published_at ? new Date(release.published_at) : new Date())
   const isPrerelease = release.prerelease
   const isDraft = release.draft
 

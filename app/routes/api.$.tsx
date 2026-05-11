@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
-import { getGithubURLFromNPM, getLatestNPMRelease, getLatestRelease, getOwnerInfo, searchNPMPackages, searchRepositories, validateNPMPackage, validateRepository } from '../lib/github.server'
+import { fetchNPMPackage, getLatestRelease, searchNPMPackages, searchRepositories } from '../lib/github.server'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -75,9 +75,15 @@ export async function action({ request }: ActionFunctionArgs): Promise<{
     return { error: 'Invalid format. Use owner/repo for GitHub or package-name for NPM', repositoryReleases: [], alreadyFetched: _alreadyFetched }
   }
 
-  const results: any[] = []
-
-  for (const item of items) {
+  const promiseSettledResult = await Promise.allSettled(items.map(async (item): Promise<{
+    owner: string
+    repo: string
+    release: any
+    error?: string
+    ownerAvatar?: string
+    source?: string
+    npmPackageName?: string
+  } | undefined> => {
     // Check if it's a scoped npm package (@scope/name) or a GitHub repo (owner/repo)
     const isScoped = item.startsWith('@')
 
@@ -87,129 +93,78 @@ export async function action({ request }: ActionFunctionArgs): Promise<{
       const repoKey = `${owner}/${repo}`
 
       if (!owner || !repo) {
-        results.push({
+        return {
           owner: item,
           repo: '',
           release: null,
           error: 'Invalid GitHub repository format. Use owner/repo',
-        })
-        continue
+        }
       }
 
       // Skip if already fetched
       if (alreadyFetched.has(repoKey)) {
         _alreadyFetched.push(repoKey)
-        continue
-      }
-
-      const isValid = await validateRepository(owner, repo)
-      if (!isValid) {
-        results.push({
-          owner,
-          repo,
-          release: null,
-          error: `Repository not found`,
-        })
-        continue
+        return
       }
 
       const release = await getLatestRelease(owner, repo)
-      results.push({
+      return {
         owner,
         repo,
         release,
         error: !release ? 'No releases found' : undefined,
         ownerAvatar: release?.author.avatar_url,
         source: 'github',
-      })
+      }
     }
     else {
       // NPM package format: package-name or @scope/name
       const packageName = item.trim()
-
-      const isValid = await validateNPMPackage(packageName)
-      if (!isValid) {
-        results.push({
+      const npmPackage = await fetchNPMPackage(packageName)
+      if (!npmPackage) {
+        return {
           owner: 'npm',
           repo: packageName,
           release: null,
           error: `Package not found on npm`,
           source: 'npm',
-        })
-        continue
-      }
-
-      const githubUrl = await getGithubURLFromNPM(packageName)
-      let gitHubOwner: string | null = null
-      let gitHubRepo: string | null = null
-
-      if (githubUrl) {
-        try {
-          const urlParts = githubUrl.replace('https://github.com/', '').split('/')
-          gitHubOwner = urlParts[0]
-          gitHubRepo = urlParts[1]
-
-          if (gitHubOwner && gitHubRepo) {
-            const repoKey = `${gitHubOwner}/${gitHubRepo}`
-
-            // Skip if already fetched
-            if (alreadyFetched.has(repoKey)) {
-              _alreadyFetched.push(repoKey)
-              continue
-            }
-
-            const isRepoValid = await validateRepository(gitHubOwner, gitHubRepo)
-            if (isRepoValid) {
-              const ownerInfo = await getOwnerInfo(gitHubOwner)
-              const release = await getLatestRelease(gitHubOwner, gitHubRepo)
-              results.push({
-                owner: gitHubOwner,
-                repo: gitHubRepo,
-                release,
-                error: !release ? 'No releases found' : undefined,
-                ownerAvatar: ownerInfo?.avatar_url,
-                source: 'github',
-                npmPackageName: packageName,
-              })
-              continue
-            }
-          }
-        }
-        catch (error) {
-          console.error(`Error parsing GitHub URL for NPM package ${packageName}:`, error)
         }
       }
 
-      const npmRelease = await getLatestNPMRelease(packageName)
-      // Extract owner/repo from npm package
-      let owner = 'npm'
-      let repo = packageName
-      let ownerAvatar = npmRelease?.author?.avatar_url || 'https://www.gravatar.com/avatar/npm?d=identicon'
+      try {
+        const gitHubOwner = npmPackage.owner
+        const gitHubRepo = npmPackage.repo
+        const repoKey = `${gitHubOwner}/${gitHubRepo}`
 
-      // If we found a GitHub URL earlier, use its owner/repo instead of package name
-      if (gitHubOwner && gitHubRepo) {
-        owner = gitHubOwner
-        repo = gitHubRepo
-        const ownerInfo = await getOwnerInfo(gitHubOwner)
-        if (ownerInfo) {
-          ownerAvatar = ownerInfo.avatar_url
+        // Skip if already fetched
+        if (alreadyFetched.has(repoKey)) {
+          _alreadyFetched.push(repoKey)
+          return
+        }
+
+        const release = await getLatestRelease(gitHubOwner, gitHubRepo)
+        return {
+          owner: gitHubOwner,
+          repo: gitHubRepo,
+          release,
+          error: !release ? 'No releases found' : undefined,
+          ownerAvatar: release?.author.avatar_url,
+          source: 'github',
+          npmPackageName: packageName,
         }
       }
-      else if (npmRelease?.author?.login) {
-        owner = npmRelease.author.login
+      catch (error) {
+        console.error(`Error parsing GitHub URL for NPM package ${packageName}:`, error)
       }
-
-      results.push({
-        owner,
-        repo,
-        release: npmRelease,
-        error: !npmRelease ? 'No versions found' : undefined,
-        ownerAvatar,
-        source: 'npm',
-        npmPackageName: packageName,
-      })
     }
-  }
+  }))
+
+  const results: any[] = []
+  promiseSettledResult.forEach((v) => {
+    if (v.status === 'fulfilled' && v.value !== undefined) {
+      results.push(v.value)
+    }
+  })
 
   return { repositoryReleases: results, alreadyFetched: _alreadyFetched }
 }

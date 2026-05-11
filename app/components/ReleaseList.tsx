@@ -14,7 +14,7 @@ import { FaTimes } from 'react-icons/fa'
 import { ReleaseCard } from './ReleaseCard'
 import { Tooltip } from './ui/tooltip'
 
-interface RepositoryRelease {
+export interface RepositoryRelease {
   owner: string
   repo: string
   release: Release | null
