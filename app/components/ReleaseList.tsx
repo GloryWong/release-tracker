@@ -3,6 +3,7 @@ import {
   Box,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Image,
   Separator,
@@ -11,6 +12,8 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { FaTimes } from 'react-icons/fa'
+import { SiNpm } from 'react-icons/si'
+import { ExternalLink } from './ExternalLink'
 import { ReleaseCard } from './ReleaseCard'
 import { Tooltip } from './ui/tooltip'
 
@@ -20,6 +23,7 @@ export interface RepositoryRelease {
   release: Release | null
   error?: string
   ownerAvatar?: string
+  npmPackageName?: string
 }
 
 interface ReleaseListProps {
@@ -72,31 +76,41 @@ export function ReleaseList({ repositoryReleases, clearRepositoryReleases }: Rel
           return (
             <Box key={`${item.owner}/${item.repo}`} height={['300px', '380px', '380px', '450px']} display="flex" flexDirection="column">
               <HStack mb={[2, 4]}>
-                {item.ownerAvatar && (
-                  <Image
-                    src={item.ownerAvatar}
-                    alt={item.owner}
-                    width="30px"
-                    height="30px"
-                    borderRadius="full"
-                    flexShrink={0}
-                  />
+                <HStack flexGrow={1} minW={0}>
+                  {item.ownerAvatar && (
+                    <Image
+                      src={item.ownerAvatar}
+                      alt={item.owner}
+                      width="30px"
+                      height="30px"
+                      borderRadius="full"
+                      borderWidth={1}
+                      borderColor="border.emphasized"
+                      borderStyle="solid"
+                      flexShrink={0}
+                    />
+                  )}
+                  <Box flexGrow={1} minWidth={0} truncate>
+                    <Heading
+                      as="a"
+                      {...{ href: repoUrl, target: '_blank', rel: 'noopener noreferrer nofollow' }}
+                      size="xl"
+                      color="blue.600"
+                      _dark={{ color: 'blue.400' }}
+                      _hover={{ textDecoration: 'underline' }}
+                      maxWidth="full"
+                    >
+                      {item.owner}
+                      /
+                      {item.repo}
+                    </Heading>
+                  </Box>
+                </HStack>
+                {item.npmPackageName && (
+                  <ExternalLink href={`https://www.npmjs.com/package/${item.npmPackageName}`}>
+                    <Icon boxSize="24px" as={SiNpm} color="red.emphasized" />
+                  </ExternalLink>
                 )}
-                <Box flexGrow={1} minWidth={0} truncate>
-                  <Heading
-                    as="a"
-                    {...{ href: repoUrl, target: '_blank', rel: 'noopener noreferrer nofollow' }}
-                    size="xl"
-                    color="blue.600"
-                    _dark={{ color: 'blue.400' }}
-                    _hover={{ textDecoration: 'underline' }}
-                    maxWidth="full"
-                  >
-                    {item.owner}
-                    /
-                    {item.repo}
-                  </Heading>
-                </Box>
               </HStack>
               <Box flexGrow={1} minHeight={0}>
                 {

@@ -151,7 +151,7 @@ export async function action({ request }: ActionFunctionArgs): Promise<{
           release,
           error: !release ? 'No releases found' : undefined,
           ownerAvatar: npmPackage.ownerAvatar,
-          source: 'github',
+          source: 'npm',
           npmPackageName: packageName,
         }
       }
