@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
-import { fetchNPMPackage, getLatestRelease, searchNPMPackages, searchRepositories } from '../lib/github.server'
+import { fetchNPMPackage, getLatestRelease, getOwnerInfo, searchNPMPackages, searchRepositories } from '../lib/github.server'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -107,13 +107,15 @@ export async function action({ request }: ActionFunctionArgs): Promise<{
         return
       }
 
-      const release = await getLatestRelease(owner, repo)
+      const [result1, result2] = await Promise.allSettled([getLatestRelease(owner, repo), getOwnerInfo(owner)])
+      const release = result1.status === 'fulfilled' ? result1.value : null
+      const ownerInfo = result2.status === 'fulfilled' ? result2.value : null
       return {
         owner,
         repo,
         release,
         error: !release ? 'No releases found' : undefined,
-        ownerAvatar: release?.author.avatar_url,
+        ownerAvatar: ownerInfo?.avatar_url ?? release?.author.avatar_url,
         source: 'github',
       }
     }
@@ -148,7 +150,7 @@ export async function action({ request }: ActionFunctionArgs): Promise<{
           repo: gitHubRepo,
           release,
           error: !release ? 'No releases found' : undefined,
-          ownerAvatar: release?.author.avatar_url,
+          ownerAvatar: npmPackage.ownerAvatar,
           source: 'github',
           npmPackageName: packageName,
         }
