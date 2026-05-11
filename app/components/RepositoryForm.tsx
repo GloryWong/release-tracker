@@ -489,7 +489,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
   }
 
   return (
-    <VStack gap={4} width="100%" px={[2, 0]}>
+    <VStack gap={4} width="100%">
       <Box width="100%">
         <Tabs.Root
           value={String(tabIndex)}
@@ -641,7 +641,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                   {npmSuggestions.map((suggestion, index) => (
                     <Box
                       key={suggestion.packageName}
-                      px={4}
+                      px={[2, 3]}
                       py={3}
                       cursor="pointer"
                       bg={
@@ -665,7 +665,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                         _hover: { bg: 'gray.700' },
                       }}
                     >
-                      <HStack gap={3} mb={1}>
+                      <HStack gap={[2, 3]} mb={1} alignItems="start">
                         {suggestion.ownerAvatar && (
                           <Image
                             src={suggestion.ownerAvatar}
@@ -676,20 +676,20 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                             flexShrink={0}
                           />
                         )}
-                        <Text fontWeight="medium" fontSize="sm">
-                          <strong>{suggestion.packageName}</strong>
-                          {' '}
-                          •
-                          {suggestion.owner}
-                          /
-                          {suggestion.repo}
-                        </Text>
+                        <HStack fontWeight="medium" gap={[1, 2]} fontSize="sm" flexGrow={1} minW={0} flexDirection={['column', 'row']} alignItems={['start', 'center']}>
+                          <Text textWrap="nowrap" truncate fontWeight="bolder" maxW="full">{suggestion.packageName}</Text>
+                          <Text color="fg.muted" display={['none', 'block']}>•</Text>
+                          <Text textWrap="nowrap" flexGrow={1} minW={0} maxW="full" truncate>
+                            {suggestion.owner}
+                            /
+                            {suggestion.repo}
+                          </Text>
+                        </HStack>
                       </HStack>
                       {suggestion.description && (
                         <Text
                           fontSize="xs"
-                          color="gray.600"
-                          _dark={{ color: 'gray.400' }}
+                          color="fg.muted"
                           ml={suggestion.ownerAvatar ? '32px' : '0'}
                           overflow="hidden"
                           textOverflow="ellipsis"
@@ -829,7 +829,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                   {githubSuggestions.map((suggestion, index) => (
                     <Box
                       key={`${suggestion.owner}/${suggestion.repo}`}
-                      px={4}
+                      px={[2, 3]}
                       py={3}
                       cursor="pointer"
                       bg={
@@ -855,7 +855,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                         _hover: { bg: 'gray.700' },
                       }}
                     >
-                      <HStack gap={3} mb={1}>
+                      <HStack gap={[2, 3]} mb={1} alignItems="start">
                         {suggestion.ownerAvatar && (
                           <Image
                             src={suggestion.ownerAvatar}
@@ -866,7 +866,7 @@ export function RepositoryForm({ isLoading = false, sessionCache = new Map() }: 
                             flexShrink={0}
                           />
                         )}
-                        <Text fontWeight="medium" fontSize="sm">
+                        <Text fontWeight="medium" fontSize="sm" flexGrow={1} minW={0} textWrap="nowrap" truncate>
                           {suggestion.owner}
                           /
                           <strong>{suggestion.repo}</strong>

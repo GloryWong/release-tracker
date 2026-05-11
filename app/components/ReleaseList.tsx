@@ -75,41 +75,45 @@ export function ReleaseList({ repositoryReleases, clearRepositoryReleases }: Rel
 
           return (
             <Box key={`${item.owner}/${item.repo}`} height={['300px', '380px', '380px', '450px']} display="flex" flexDirection="column">
-              <HStack mb={[2, 4]}>
+              <HStack mb={[2, 4]} gap={4}>
                 <HStack flexGrow={1} minW={0}>
-                  {item.ownerAvatar && (
-                    <Image
-                      src={item.ownerAvatar}
-                      alt={item.owner}
-                      width="30px"
-                      height="30px"
-                      borderRadius="full"
-                      borderWidth={1}
-                      borderColor="border.emphasized"
-                      borderStyle="solid"
-                      flexShrink={0}
-                    />
-                  )}
-                  <Box flexGrow={1} minWidth={0} truncate>
-                    <Heading
-                      as="a"
-                      {...{ href: repoUrl, target: '_blank', rel: 'noopener noreferrer nofollow' }}
-                      size="xl"
-                      color="blue.600"
-                      _dark={{ color: 'blue.400' }}
-                      _hover={{ textDecoration: 'underline' }}
-                      maxWidth="full"
-                    >
-                      {item.owner}
-                      /
-                      {item.repo}
-                    </Heading>
-                  </Box>
+                  <ExternalLink maxW="full" href={repoUrl}>
+                    <HStack w="full">
+                      {item.ownerAvatar && (
+                        <Image
+                          src={item.ownerAvatar}
+                          alt={item.owner}
+                          width="30px"
+                          height="30px"
+                          borderRadius="full"
+                          borderWidth={1}
+                          borderColor="border.emphasized"
+                          borderStyle="solid"
+                          flexShrink={0}
+                        />
+                      )}
+                      <Heading
+                        size="xl"
+                        color="blue.600"
+                        _dark={{ color: 'blue.400' }}
+                        maxWidth="full"
+                        flexGrow={1}
+                        minWidth={0}
+                        truncate
+                      >
+                        {item.owner}
+                        /
+                        {item.repo}
+                      </Heading>
+                    </HStack>
+                  </ExternalLink>
                 </HStack>
                 {item.npmPackageName && (
-                  <ExternalLink href={`https://www.npmjs.com/package/${item.npmPackageName}`}>
-                    <Icon boxSize="24px" as={SiNpm} color="red.emphasized" />
-                  </ExternalLink>
+                  <Tooltip content={`Open the link to npm package "${item.npmPackageName}"`}>
+                    <ExternalLink href={`https://www.npmjs.com/package/${item.npmPackageName}`}>
+                      <Icon boxSize="24px" as={SiNpm} color="red.emphasized" _hover={{ color: 'red.solid' }} />
+                    </ExternalLink>
+                  </Tooltip>
                 )}
               </HStack>
               <Box flexGrow={1} minHeight={0}>

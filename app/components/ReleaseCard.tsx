@@ -83,21 +83,23 @@ export function ReleaseCard({ release, repoUrl, owner, repo, ownerAvatar, hideAl
             {/* Meta Info */}
             {release.author && (
               <HStack gap={1} fontSize={['xs', 'sm']} color="fg.muted" width="full">
-                <Box
-                  as="img"
-                  {...{
-                    src: release.author.avatar_url,
-                    alt: release.author.login,
-                  }}
-                  width="24px"
-                  height="24px"
-                  borderRadius="full"
-                  flexShrink={0}
-                />
-                <ExternalLink href={`https://github.com/${owner}`} overflow="hidden">
-                  <Text fontWeight="semibold" color="fg.muted" truncate>
-                    {release.author.login}
-                  </Text>
+                <ExternalLink href={release.author.html_url} overflow="hidden">
+                  <HStack gap={1} maxW="full">
+                    <Box
+                      as="img"
+                      {...{
+                        src: release.author.avatar_url,
+                        alt: release.author.login,
+                      }}
+                      width="24px"
+                      height="24px"
+                      borderRadius="full"
+                      flexShrink={0}
+                    />
+                    <Text fontWeight="semibold" color="fg.muted" truncate>
+                      {release.author.login}
+                    </Text>
+                  </HStack>
                 </ExternalLink>
                 <Text textWrap="nowrap">released this</Text>
                 <Box whiteSpace="nowrap">
